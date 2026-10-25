@@ -1,19 +1,19 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, DM_Sans, IM_Fell_English } from "next/font/google";
+import { IM_Fell_English, Instrument_Serif, Manrope } from "next/font/google";
 import { AMAZON_URL, site } from "@/lib/site";
 import "./globals.css";
 
-const display = Cormorant_Garamond({
+const display = Instrument_Serif({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
+  weight: "400",
   style: ["normal", "italic"],
   variable: "--font-display",
   display: "swap",
 });
 
-const sans = DM_Sans({
+const sans = Manrope({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
+  weight: ["400", "500", "600"],
   variable: "--font-sans",
   display: "swap",
 });
@@ -67,7 +67,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#FAF6EE",
+  themeColor: "#180E29",
   width: "device-width",
   initialScale: 1,
 };
@@ -90,7 +90,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:bg-ink focus:px-4 focus:py-2 focus:text-ivory"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:bg-ivory focus:px-4 focus:py-2 focus:text-midnight"
         >
           Skip to content
         </a>

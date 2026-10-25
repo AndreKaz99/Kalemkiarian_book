@@ -37,9 +37,9 @@ If you add a custom domain, update `site.url` in `lib/site.ts` (used for the can
 ## Editing content
 
 - **Copy, links, nav, themes:** `lib/site.ts`
-- **Sections:** `components/` — `Hero`, `Book3D`, `AboutBook`, `WhyIWrote`, `Author`, `Legacy`, `Purchase`, `Footer`, `Navigation`
+- **Sections (in page order):** `components/` — `Hero` (hero + prologue), `Book3D` (the interactive book), `AboutBook` (open-spread layout, themes, and the pinned "heart of the book" quote), `WhyIWrote`, `Author`, `Legacy`, `Purchase`, `Footer`, `Navigation`
+- **Design system:** purple palette and fonts (Instrument Serif, Manrope, IM Fell English) in `tailwind.config.ts`, `app/layout.tsx` and `app/globals.css`
 - **Shared pieces (buttons, reveal animations, placeholders):** `components/primitives.tsx`
-- **Colors & fonts:** `tailwind.config.ts`, `app/layout.tsx`
 - **SEO / social card:** `app/layout.tsx`, `app/opengraph-image.tsx`
 
 ## Notes

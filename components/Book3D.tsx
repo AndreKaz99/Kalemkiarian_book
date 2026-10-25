@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  AnimatePresence,
   motion,
   useMotionTemplate,
   useMotionValue,
@@ -8,91 +9,120 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
-import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { AMAZON_URL, assets, site, withBasePath } from "@/lib/site";
-import { Arrow, CoverArt } from "./primitives";
+import { Arrow, CoverImage } from "./primitives";
 
 /**
- * Interactive 3D hardcover.
- * — Tilts toward the pointer (fine pointers only, never with reduced motion)
- * — Hover lifts the book and lets the cover fall slightly ajar
- * — Click opens the cover, then turns the flyleaf, revealing an introduction + purchase link
+ * A collectible hardcover, built from planes in CSS 3D.
  *
- * Geometry: --w is the book width, --d its thickness. Pages sit between the
- * covers; edges are four thin planes rotated into place.
+ * — follows the pointer with spring physics; light and shadow move with it
+ * — hover lifts the book and lets the cover fall ajar
+ * — click: the cover swings open, then the title page turns with a real curl
+ *   (the leaf is a chain of hinged strips, each bending a little behind the last)
+ * — the spread reveals the author's words and a way to buy the book
+ *
+ * --w is the book's width, --d its thickness.
  */
 
-const turnEase = [0.65, 0, 0.35, 1] as const;
+const STRIPS = 7;
+const swing = [0.7, 0, 0.25, 1] as const;
+const LEAF_DELAY = 1.05;
 
-export function Book3D() {
+export function Book3D({ onOpenChange }: { onOpenChange?: (open: boolean) => void }) {
   const reduce = useReducedMotion();
   const stageRef = useRef<HTMLDivElement>(null);
   const bookRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
-  const [hover, setHover] = useState(false);
-  const [openScale, setOpenScale] = useState(1);
-  // On narrow screens the spread can't fit legibly: keep full size and let the left page slide off-stage
-  const [compact, setCompact] = useState(false);
-  const [bookW, setBookW] = useState(0);
   const [closing, setClosing] = useState(false);
+  const [hover, setHover] = useState(false);
+  const [fine, setFine] = useState(false);
+  const [bookW, setBookW] = useState(0);
+  const [fit, setFit] = useState({ scale: 1, compact: false, x: 0 });
   const closeTimer = useRef<ReturnType<typeof setTimeout>>();
 
-  const toggle = useCallback((next: boolean) => {
-    setOpen(next);
-    clearTimeout(closeTimer.current);
-    if (!next) {
-      setClosing(true);
-      closeTimer.current = setTimeout(() => setClosing(false), 2000);
-    } else {
-      setClosing(false);
-    }
-  }, []);
+  const toggle = useCallback(
+    (next: boolean) => {
+      setOpen(next);
+      onOpenChange?.(next);
+      clearTimeout(closeTimer.current);
+      setClosing(!next);
+      if (!next) closeTimer.current = setTimeout(() => setClosing(false), 2600);
+    },
+    [onOpenChange]
+  );
   useEffect(() => () => clearTimeout(closeTimer.current), []);
 
-  /* Pointer tilt -------------------------------------------------- */
-  const px = useMotionValue(0);
-  const py = useMotionValue(0);
-  const sx = useSpring(px, { stiffness: 70, damping: 18, mass: 0.6 });
-  const sy = useSpring(py, { stiffness: 70, damping: 18, mass: 0.6 });
+  /* Pointer: tilt, light and the contextual cursor --------------------- */
+  const nx = useMotionValue(0);
+  const ny = useMotionValue(0);
+  const sx = useSpring(nx, { stiffness: 60, damping: 16, mass: 0.7 });
+  const sy = useSpring(ny, { stiffness: 60, damping: 16, mass: 0.7 });
+  const baseY = open ? -2 : -26;
+  const baseX = open ? 14 : 5;
+  const rotateY = useTransform(sx, (v) => baseY + v * (open ? 7 : 18));
+  const rotateX = useTransform(sy, (v) => baseX - v * (open ? 5 : 11));
+  const lightX = useTransform(sx, [-1, 1], [85, 15]);
+  const lightY = useTransform(sy, [-1, 1], [10, 70]);
+  const glare = useMotionTemplate`radial-gradient(90% 70% at ${lightX}% ${lightY}%, rgba(255,255,255,0.32), rgba(255,255,255,0) 60%)`;
+  const shadowX = useTransform(sx, [-1, 1], [40, -40]);
 
-  const baseY = open ? -4 : -24;
-  const baseX = open ? 10 : 4;
-  const rotateY = useTransform(sx, (v) => baseY + v * (open ? 6 : 14));
-  const rotateX = useTransform(sy, (v) => baseX - v * (open ? 4 : 8));
-  const glareX = useTransform(sx, [-1, 1], [10, 90]);
-  const glare = useMotionTemplate`radial-gradient(120% 80% at ${glareX}% 20%, rgba(255,255,255,0.28), rgba(255,255,255,0) 55%)`;
-  const shadowX = useTransform(sx, [-1, 1], [-30, 30]);
+  const cx = useMotionValue(-200);
+  const cy = useMotionValue(-200);
+  const cursorX = useSpring(cx, { stiffness: 500, damping: 40 });
+  const cursorY = useSpring(cy, { stiffness: 500, damping: 40 });
+  const [side, setSide] = useState<"left" | "right">("right");
 
   useEffect(() => {
     if (reduce) return;
-    const fine = window.matchMedia("(pointer: fine)").matches;
-    if (!fine) return;
+    const isFine = window.matchMedia("(pointer: fine)").matches;
+    setFine(isFine);
+    if (!isFine) return;
     const onMove = (e: PointerEvent) => {
-      px.set((e.clientX / window.innerWidth) * 2 - 1);
-      py.set((e.clientY / window.innerHeight) * 2 - 1);
+      const r = bookRef.current?.getBoundingClientRect();
+      if (r) {
+        const cxBook = r.left + r.width / 2;
+        const cyBook = r.top + r.height / 2;
+        nx.set(Math.max(-1, Math.min(1, (e.clientX - cxBook) / (window.innerWidth / 2))));
+        ny.set(Math.max(-1, Math.min(1, (e.clientY - cyBook) / (window.innerHeight / 2))));
+        setSide(e.clientX < r.left ? "left" : "right");
+      }
+      cx.set(e.clientX);
+      cy.set(e.clientY);
     };
     window.addEventListener("pointermove", onMove, { passive: true });
     return () => window.removeEventListener("pointermove", onMove);
-  }, [px, py, reduce]);
+  }, [reduce, nx, ny, cx, cy]);
 
-  /* Fit the open spread (2× width) inside the stage ---------------- */
+  /* Fit the open spread inside the stage ------------------------------- */
   const measure = useCallback(() => {
     const stage = stageRef.current;
     const book = bookRef.current;
     if (!stage || !book) return;
     const w = book.offsetWidth;
     setBookW(w);
-    const fit = Math.min(1, (stage.offsetWidth * 0.96) / (w * 2));
-    setCompact(fit < 0.8);
-    setOpenScale(fit < 0.8 ? 1 : fit);
+    const room = window.innerWidth * 0.94;
+    const s = Math.min(1, room / (w * 2));
+    if (s >= 0.78) {
+      setFit({ scale: s, compact: false, x: (w / 2) * s });
+    } else {
+      // Phones: enlarge the right-hand page to fill the width; the left page waits off-stage.
+      const stageW = stage.offsetWidth;
+      const cs = Math.min(1.18, (stageW - 28) / w);
+      setFit({ scale: cs, compact: true, x: 14 + (w * cs) / 2 - stageW / 2 });
+    }
   }, []);
 
   useEffect(() => {
     measure();
     const ro = new ResizeObserver(measure);
     if (stageRef.current) ro.observe(stageRef.current);
-    return () => ro.disconnect();
+    window.addEventListener("resize", measure);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measure);
+    };
   }, [measure]);
 
   useEffect(() => {
@@ -102,139 +132,138 @@ export function Book3D() {
     return () => window.removeEventListener("keydown", onKey);
   }, [open, toggle]);
 
-  const coverAngle = open ? -178 : hover && !reduce && !closing ? -14 : 0;
-  const leafAngle = open ? -175 : 0;
+  const ajar = hover && !open && !closing && !reduce;
+  const coverAngle = open ? -178.5 : ajar ? -16 : 0;
+  const t = (d: number) => (reduce ? 0 : d);
+  const showCursor = fine && hover && (!open || (open && side === "left" && !fit.compact));
+
 
   return (
-    <div className="flex w-full flex-col items-center">
+    <div className="relative flex w-full flex-col items-center">
       <div
         ref={stageRef}
-        className="relative flex w-full items-center justify-center py-6"
-        style={{ perspective: "2400px", perspectiveOrigin: "50% 40%" }}
+        className="relative flex w-full items-center justify-center py-8"
+        style={{ perspective: "2600px", perspectiveOrigin: "50% 35%" }}
       >
         {/* floor shadow */}
         <motion.div
           aria-hidden
-          className="pointer-events-none absolute bottom-0 left-1/2 h-10 rounded-[50%] bg-ink/30 blur-2xl"
+          className="pointer-events-none absolute bottom-0 left-1/2 h-12 rounded-[50%] bg-black blur-2xl"
           style={{ x: shadowX, translateX: "-50%" }}
-          animate={{ width: open ? (compact ? bookW * 1.4 : bookW * 2 * openScale) : bookW * 0.95, opacity: hover || open ? 0.55 : 0.4 }}
-          transition={{ duration: 1.2, ease: turnEase }}
+          animate={{
+            width: open ? (fit.compact ? bookW * 1.3 : bookW * 2.1 * fit.scale) : bookW * (hover ? 1.15 : 0.95),
+            opacity: open ? 0.75 : hover ? 0.55 : 0.7,
+            scaleY: hover && !open ? 1.4 : 1,
+          }}
+          transition={{ duration: 1.2, ease: swing }}
         />
 
         <motion.div
-          className="relative"
-          style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+          className={`relative ${fine && !open ? "[@media(pointer:fine)]:!cursor-none" : ""}`}
           animate={{
-            x: open ? (compact ? bookW * 0.12 : (bookW / 2) * openScale) : 0,
-            scale: open ? openScale : 1,
-            z: hover && !open && !reduce ? 30 : 0,
+            x: open ? fit.x : 0,
+            scale: open ? fit.scale : 1,
+            z: hover && !open && !reduce ? 50 : 0,
+            y: hover && !open && !reduce ? -10 : 0,
           }}
-          transition={{ duration: 1.3, ease: turnEase }}
-          onHoverStart={() => setHover(true)}
-          onHoverEnd={() => setHover(false)}
+          transition={{ duration: t(1.4), ease: swing }}
+          onPointerEnter={() => setHover(true)}
+          onPointerLeave={() => setHover(false)}
+          onClick={(e) => {
+            // The ajar cover can sit in front of the hit targets, so the whole book listens.
+            if ((e.target as HTMLElement).closest("a, button")) return;
+            if (!open) toggle(true);
+            else if (e.clientX < (bookRef.current?.getBoundingClientRect().left ?? 0)) toggle(false);
+          }}
+          style={{ rotateX, rotateY, transformStyle: "preserve-3d", cursor: open ? "auto" : "pointer" }}
         >
           <div
             ref={bookRef}
-            className="relative [--d:calc(var(--w)*0.085)] [--w:clamp(210px,62vw,300px)] sm:[--w:clamp(260px,30vw,360px)]"
+            className="relative [--d:calc(var(--w)*0.075)] [--w:clamp(220px,62vw,300px)] lg:[--w:clamp(290px,25vw,400px)]"
             style={{ width: "var(--w)", height: "calc(var(--w) * 1.5)", transformStyle: "preserve-3d" }}
           >
             {/* Back cover */}
             <div
-              className="absolute inset-0 overflow-hidden rounded-r-[4px] rounded-l-[2px] bg-[#3f3a6b] shadow-2xl"
+              className="absolute inset-0 overflow-hidden rounded-[3px] bg-dusk"
               style={{ transform: "translateZ(calc(var(--d) / -2)) rotateY(180deg)" }}
             >
-              <Image
-                src={withBasePath(assets.bookBackCover.src)}
-                alt=""
-                fill
-                sizes="(max-width: 640px) 62vw, 360px"
-                className="object-cover"
-              />
+              <CoverImage back sizes="(max-width: 1024px) 62vw, 400px" />
             </div>
 
-            {/* Page edges — fore-edge, head, tail */}
+            {/* Page block: fore-edge, head, tail */}
             <div
-              className="page-edges absolute top-[1.2%] h-[97.6%]"
+              className="page-edges absolute top-[1.5%] h-[97%]"
               style={{
                 width: "calc(var(--d) - 3px)",
-                left: "calc(var(--w) - var(--d) / 2 - 3px)",
+                left: "calc(var(--w) - var(--d) / 2 - 2.5px)",
                 transform: "rotateY(90deg)",
               }}
             />
             <div
-              className="absolute left-[1px] bg-[#efe5d2]"
+              className="page-edges-h absolute left-[1px]"
               style={{
                 width: "calc(var(--w) - 5px)",
                 height: "calc(var(--d) - 3px)",
-                top: "calc(var(--d) / -2 + 4px)",
+                top: "calc(var(--d) / -2 + 1.5px + 1.5%)",
                 transform: "rotateX(90deg)",
-                backgroundImage: "repeating-linear-gradient(to bottom, #f4ecdc 0 1px, #e2d5bd 1px 2px)",
               }}
             />
             <div
-              className="absolute left-[1px] bg-[#e2d5bd]"
+              className="page-edges-h absolute left-[1px]"
               style={{
                 width: "calc(var(--w) - 5px)",
                 height: "calc(var(--d) - 3px)",
-                bottom: "calc(var(--d) / -2 + 4px)",
+                bottom: "calc(var(--d) / -2 + 1.5px + 1.5%)",
                 transform: "rotateX(-90deg)",
               }}
             />
 
             {/* Spine */}
             <div
-              className="absolute top-0 flex h-full items-center justify-center bg-gradient-to-r from-[#35305c] via-[#5e588e] to-[#35305c]"
-              style={{
-                width: "var(--d)",
-                left: "calc(var(--d) / -2)",
-                transform: "rotateY(-90deg)",
-              }}
+              className="absolute top-0 flex h-full items-center justify-center overflow-hidden bg-gradient-to-r from-[#3c3768] via-[#6a64a0] to-[#3c3768]"
+              style={{ width: "var(--d)", left: "calc(var(--d) / -2)", transform: "rotateY(-90deg)" }}
             >
               <span
-                className="whitespace-nowrap font-display text-[0.6rem] uppercase tracking-[0.25em] text-ivory/80"
+                className="whitespace-nowrap font-sans text-[0.55rem] font-semibold uppercase tracking-[0.3em] text-ivory/90"
                 style={{ writingMode: "vertical-rl" }}
               >
-                What I Want to Tell You Is... · Kalemkiarian
+                What I Want to Tell You Is... &nbsp;·&nbsp; Kalemkiarian
               </span>
             </div>
 
-            {/* Right-hand page: introduction + purchase */}
+            {/* Right-hand page — the introduction */}
             <div
-              className="absolute right-[3px] top-[1.2%] h-[97.6%] w-[calc(100%-4px)] bg-[#f7f1e4]"
+              className="absolute right-[3px] top-[1.5%] h-[97%] w-[calc(100%-4px)] bg-[#f8f4ec]"
               style={{ transform: "translateZ(calc(var(--d) / 2 - 3px))", containerType: "inline-size" }}
             >
-              <div className="pointer-events-none absolute inset-y-0 left-0 w-[12%] bg-gradient-to-r from-black/10 to-transparent" />
-              <div
-                className="flex h-full flex-col justify-between p-[11%] text-ink"
-                aria-hidden={!open}
-              >
-                <div>
-                  <p className="text-[3.4cqw] font-medium uppercase tracking-[0.3em] text-burgundy">An Introduction</p>
-                  <p className="mt-[8%] font-display text-[7.4cqw] leading-[1.08]">
-                    Divorce, seen through the eyes of a child.
-                  </p>
-                  <p className="mt-[7%] text-[4cqw] leading-[1.6] text-ink/75">
-                    Written in the voices of children, these messages help parents hear what their children struggle to
-                    say — and make more compassionate decisions on their behalf.
-                  </p>
-                </div>
-                <div className="space-y-[6%]">
+              <div className="pointer-events-none absolute inset-y-0 left-0 w-[14%] bg-gradient-to-r from-black/15 to-transparent" />
+              <div className="flex h-full flex-col p-[11%] text-ink" aria-hidden={!open}>
+                <p className="text-[3.1cqw] font-semibold uppercase tracking-[0.32em] text-violet">An introduction</p>
+                <p className="mt-[9%] font-display text-[9.4cqw] leading-[1.02]">
+                  Divorce, seen through <em className="text-violet">the eyes of a child.</em>
+                </p>
+                <p className="mt-[8%] text-[4.1cqw] leading-[1.6] text-ink/75">
+                  Written in the voices of children, these messages help parents hear what their children struggle to
+                  say — and make more compassionate decisions on their behalf.
+                </p>
+                <div className="mt-auto space-y-[5%]">
                   <a
                     href={AMAZON_URL}
                     target="_blank"
                     rel="noopener noreferrer"
                     tabIndex={open ? 0 : -1}
-                    className="group flex w-full items-center justify-between rounded-full bg-burgundy px-[8%] py-[5.5%] text-[3.5cqw] font-medium uppercase tracking-[0.2em] text-ivory transition-colors hover:bg-burgundy-deep"
+                    className="group relative flex w-full items-center justify-between overflow-hidden bg-midnight px-[8%] py-[6%] text-[3.4cqw] font-semibold uppercase tracking-[0.2em] text-ivory"
                   >
-                    Purchase on Amazon
-                    <Arrow className="transition-transform group-hover:translate-x-1" />
+                    <span className="absolute inset-0 origin-left scale-x-0 bg-violet transition-transform duration-500 ease-silk group-hover:scale-x-100" />
+                    <span className="relative">Purchase on Amazon</span>
+                    <Arrow className="relative transition-transform group-hover:translate-x-1" />
                     <span className="sr-only">(opens in a new tab)</span>
                   </a>
                   <button
                     type="button"
                     onClick={() => toggle(false)}
                     tabIndex={open ? 0 : -1}
-                    className="block w-full text-center text-[3.2cqw] uppercase tracking-[0.25em] text-ink/55 underline-offset-4 hover:text-ink hover:underline"
+                    className="block w-full text-center text-[3cqw] font-semibold uppercase tracking-[0.28em] text-ink/50 transition-colors hover:text-violet"
                   >
                     Close the book
                   </button>
@@ -242,49 +271,25 @@ export function Book3D() {
               </div>
             </div>
 
-            {/* Flyleaf — turns second */}
+            {/* The turning leaf: title page (recto) / the author's words (verso) */}
             <div
-              className="absolute right-[3px] top-[1.2%] h-[97.6%] w-[calc(100%-4px)]"
+              className="pointer-events-none absolute right-[3px] top-[1.5%] h-[97%] w-[calc(100%-4px)]"
               style={{ transform: "translateZ(calc(var(--d) / 2 - 1.5px))", transformStyle: "preserve-3d" }}
             >
               <motion.div
-                className="absolute inset-0 origin-left"
+                className="absolute inset-0"
                 style={{ transformStyle: "preserve-3d" }}
-                animate={{ rotateY: leafAngle }}
-                transition={{ duration: reduce ? 0 : 1.5, ease: turnEase, delay: open ? 1.6 : 0 }}
+                initial={false}
+                animate={{ z: open ? 4 : 0 }}
+                transition={{ duration: 0.01, delay: open ? t(0.9) : t(1.6) }}
               >
-                {/* recto: the book's actual title page */}
-                <div className="absolute inset-0 bg-[#f7f1e4]" style={{ backfaceVisibility: "hidden" }}>
-                  <Image
-                    src={withBasePath(assets.titlePage.src)}
-                    alt={assets.titlePage.alt}
-                    fill
-                    sizes="(max-width: 640px) 62vw, 360px"
-                    className="object-contain p-[4%] mix-blend-multiply"
-                  />
-                  <TurnShade open={open} delay={1.6} />
-                </div>
-                {/* verso: the author's own words */}
-                <div
-                  className="absolute inset-0 flex flex-col justify-center bg-[#f4ede0] p-[12%] text-ink"
-                  style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)", containerType: "inline-size" }}
-                >
-                  <div className="pointer-events-none absolute inset-y-0 right-0 w-[12%] bg-gradient-to-l from-black/10 to-transparent" />
-                  <span className="font-display text-[22cqw] leading-none text-burgundy/25">“</span>
-                  <p className="-mt-[6%] font-display text-[7.2cqw] italic leading-[1.22]">
-                    I wrote these messages in the voices of children to help you see your divorce through your
-                    child&rsquo;s eyes.
-                  </p>
-                  <p className="mt-[9%] text-[3.2cqw] font-medium uppercase tracking-[0.28em] text-ink/60">
-                    — {site.author}
-                  </p>
-                </div>
+                <LeafStrip i={0} open={open} reduce={!!reduce} />
               </motion.div>
             </div>
 
-            {/* Front cover — turns first */}
+            {/* Front cover — purely visual; clicks fall through to the targets beneath */}
             <div
-              className="absolute inset-0"
+              className="pointer-events-none absolute inset-0"
               style={{ transform: "translateZ(calc(var(--d) / 2))", transformStyle: "preserve-3d" }}
             >
               <motion.div
@@ -292,93 +297,185 @@ export function Book3D() {
                 style={{ transformStyle: "preserve-3d" }}
                 animate={{ rotateY: coverAngle }}
                 transition={{
-                  duration: reduce ? 0 : open || closing ? 1.4 : 0.8,
-                  ease: turnEase,
-                  delay: closing ? 0.5 : 0,
+                  duration: t(open || closing ? 1.5 : 0.9),
+                  ease: swing,
+                  delay: closing ? t(1.25) : 0,
                 }}
               >
-                {/* outside */}
                 <div
-                  className="absolute inset-0 overflow-hidden rounded-r-[4px] rounded-l-[2px] shadow-[inset_4px_0_6px_-2px_rgba(0,0,0,0.25)]"
+                  className="absolute inset-0 overflow-hidden rounded-r-[3px] rounded-l-[1px]"
                   style={{ backfaceVisibility: "hidden" }}
                 >
-                  <CoverArt priority sizes="(max-width: 640px) 62vw, 360px" />
-                  {/* hinge groove + glare */}
-                  <div className="pointer-events-none absolute inset-y-0 left-[3.5%] w-[2px] bg-gradient-to-r from-black/25 via-white/20 to-transparent" />
-                  <motion.div className="pointer-events-none absolute inset-0" style={{ background: glare }} />
-                  <TurnShade open={open} delay={0} />
+                  <CoverImage priority sizes="(max-width: 1024px) 62vw, 400px" />
+                  {/* hinge groove, edge highlight, moving light */}
+                  <div className="pointer-events-none absolute inset-y-0 left-[3.2%] w-[3px] bg-gradient-to-r from-black/30 via-white/25 to-transparent" />
+                  <div className="pointer-events-none absolute inset-y-0 left-0 w-[3.2%] bg-gradient-to-r from-black/35 to-black/5" />
+                  <motion.div
+                    className="pointer-events-none absolute inset-0 mix-blend-soft-light"
+                    style={{ background: glare }}
+                    animate={{ opacity: hover ? 1 : 0.55 }}
+                  />
+                  <motion.div
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 bg-gradient-to-l from-black/50 to-black/0"
+                    initial={false}
+                    animate={{ opacity: open ? [0, 0.8, 0.8] : [0.8, 0.8, 0] }}
+                    transition={{ duration: t(1.5), delay: closing ? t(1.25) : 0, ease: "easeInOut" }}
+                  />
                 </div>
                 {/* inside: endpaper */}
                 <div
-                  className="absolute inset-0 overflow-hidden rounded-l-[4px] bg-[#3a3566]"
+                  className="absolute inset-0 overflow-hidden rounded-l-[3px] bg-midnight"
                   style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
                 >
-                  <svg className="absolute inset-0 h-full w-full opacity-20" aria-hidden>
-                    <defs>
-                      <pattern id="endpaper" width="22" height="22" patternUnits="userSpaceOnUse">
-                        <circle cx="11" cy="11" r="1.2" fill="#FAF6EE" />
-                        <path d="M0 11h4M18 11h4M11 0v4M11 18v4" stroke="#FAF6EE" strokeWidth="0.5" />
-                      </pattern>
-                    </defs>
-                    <rect width="100%" height="100%" fill="url(#endpaper)" />
-                  </svg>
+                  <div
+                    className="absolute inset-0 opacity-25"
+                    style={{
+                      backgroundImage:
+                        "repeating-linear-gradient(45deg, #C8ACEF 0 1px, transparent 1px 14px), repeating-linear-gradient(-45deg, #C8ACEF 0 1px, transparent 1px 14px)",
+                    }}
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="bg-midnight px-4 py-2 font-press text-2xl italic text-lavender">S·M</span>
+                  </div>
                 </div>
               </motion.div>
             </div>
           </div>
 
-          {/* Click target when closed (keyboard accessible) */}
-          {!open && (
+          {/* Interaction targets */}
+          {!open ? (
             <button
               type="button"
               onClick={() => toggle(true)}
-              aria-label="Open the book to read an introduction"
-              className="absolute inset-0 z-10 cursor-pointer rounded-sm bg-transparent"
-              style={{ transform: "translateZ(calc(var(--d, 30px) / 2 + 2px))" }}
+              aria-label="Open the book"
+              className="absolute inset-0 z-10 cursor-pointer [@media(pointer:fine)]:cursor-none"
+              style={{ transform: "translateZ(calc(var(--d, 24px) / 2 + 4px))" }}
             />
+          ) : (
+            !fit.compact && (
+              <button
+                type="button"
+                onClick={() => toggle(false)}
+                aria-label="Close the book"
+                className="absolute inset-y-0 right-full z-10 w-full cursor-pointer [@media(pointer:fine)]:cursor-none"
+                style={{ transform: "translateZ(40px)" }}
+              />
+            )
           )}
         </motion.div>
       </div>
 
-      {/* Caption under the book */}
-      <div className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-[0.68rem] uppercase tracking-[0.28em] text-smoke">
+      {/* caption */}
+      <div className="relative z-10 mt-6 flex items-center gap-5 text-[0.66rem] font-semibold uppercase tracking-[0.3em] text-lavender/80">
         <button
           type="button"
           onClick={() => toggle(!open)}
-          className="group inline-flex items-center gap-2 transition-colors hover:text-ink"
           aria-expanded={open}
+          className="group inline-flex items-center gap-3 transition-colors hover:text-ivory"
         >
-          <span className="relative flex h-2 w-2">
-            {!open && (
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-burgundy/50 motion-reduce:animate-none" />
-            )}
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-burgundy" />
+          <span className="relative h-px w-8 overflow-hidden bg-lavender/30">
+            <span className="absolute inset-0 origin-left animate-[pulse_2.4s_ease-in-out_infinite] bg-lavender motion-reduce:animate-none" />
           </span>
-          {open ? "Close the book" : "Click the book to open"}
+          {open ? "Close the book" : fine ? "Click the book to open" : "Tap the book to open"}
         </button>
-        <span className="hidden h-3 w-px bg-smoke/30 sm:block" />
-        <a
-          href={AMAZON_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="underline decoration-smoke/30 underline-offset-[6px] transition-colors hover:text-burgundy hover:decoration-burgundy"
-        >
-          Shop on Amazon<span className="sr-only"> (opens in a new tab)</span>
-        </a>
       </div>
+
+      {/* contextual cursor */}
+      <AnimatePresence>
+        {showCursor && (
+          <motion.div
+            aria-hidden
+            className="pointer-events-none fixed left-0 top-0 z-[80] flex h-[88px] w-[88px] items-center justify-center rounded-full bg-ivory font-sans text-[0.62rem] font-semibold uppercase tracking-[0.28em] text-midnight"
+            style={{ x: cursorX, y: cursorY, translateX: "-50%", translateY: "-50%" }}
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          >
+            {open ? "Close" : "Open"}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
 
-/** Darkens a page mid-turn, the way light falls off a curling sheet. */
-function TurnShade({ open, delay }: { open: boolean; delay: number }) {
+/**
+ * One hinged strip of the turning page. Strip 0 hinges on the spine and carries the
+ * main rotation; each child hinges on its parent's outer edge and lags slightly,
+ * so the sheet curls as it turns and settles flat when it lands.
+ */
+function LeafStrip({ i, open, reduce }: { i: number; open: boolean; reduce: boolean }) {
+  const isBase = i === 0;
+  const bend = 7.5;
+  const animate = isBase ? { rotateY: open ? -176 : 0 } : { rotateY: open ? [0, bend, 0] : [0, -bend, 0] };
+  const transition = {
+    duration: reduce ? 0 : 1.6,
+    ease: isBase ? swing : ("easeInOut" as const),
+    delay: open && !reduce ? LEAF_DELAY : 0,
+    times: isBase ? undefined : [0, 0.5, 1],
+  };
+  const shade = 0.08 + (i / STRIPS) * 0.3;
+
   return (
     <motion.div
-      aria-hidden
-      className="pointer-events-none absolute inset-0 bg-gradient-to-l from-black/40 via-black/10 to-transparent"
+      className="absolute top-0 h-full origin-left"
+      style={{
+        left: isBase ? 0 : "calc(100% - 1.5px)",
+        width: isBase ? `calc(${100 / STRIPS}% + 1.5px)` : "100%",
+        transformStyle: "preserve-3d",
+      }}
       initial={false}
-      animate={{ opacity: open ? [0, 0.9, 0] : 0 }}
-      transition={{ duration: 1.4, delay, ease: "easeInOut" }}
-    />
+      animate={animate}
+      transition={transition}
+    >
+      {/* recto */}
+      <div className="absolute inset-0 overflow-hidden bg-[#f8f4ec]" style={{ backfaceVisibility: "hidden" }}>
+        <div className="absolute top-0 h-full" style={{ width: `${STRIPS * 100}%`, left: `-${i * 100}%` }}>
+          <Image
+            src={withBasePath(assets.titlePage.src)}
+            alt={i === 0 ? assets.titlePage.alt : ""}
+            fill
+            sizes="(max-width: 1024px) 62vw, 400px"
+            className="object-contain px-[6%] py-[5%] mix-blend-multiply"
+          />
+        </div>
+        <motion.div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-black"
+          initial={false}
+          animate={{ opacity: open ? [0, shade, 0] : [0, shade, 0] }}
+          transition={{ duration: reduce ? 0 : 1.6, delay: open && !reduce ? LEAF_DELAY : 0 }}
+        />
+      </div>
+      {/* verso */}
+      <div
+        className="absolute inset-0 overflow-hidden bg-[#f5f0e6]"
+        style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
+      >
+        <div
+          className="absolute top-0 h-full"
+          style={{ width: `${STRIPS * 100}%`, left: `-${(STRIPS - 1 - i) * 100}%`, containerType: "inline-size" }}
+          aria-hidden={i > 0 || !open}
+        >
+          <Verso />
+        </div>
+      </div>
+      {i < STRIPS - 1 && <LeafStrip i={i + 1} open={open} reduce={reduce} />}
+    </motion.div>
+  );
+}
+
+function Verso() {
+  return (
+    <div className="relative flex h-full flex-col justify-center p-[13%] text-ink">
+      <div className="pointer-events-none absolute inset-y-0 right-0 w-[14%] bg-gradient-to-l from-black/12 to-transparent" />
+      <span className="font-display text-[26cqw] leading-[0.6] text-violet/30">&ldquo;</span>
+      <p className="mt-[4%] font-display text-[8.4cqw] italic leading-[1.16]">
+        I wrote these messages in the voices of children to help you see your divorce through your child&rsquo;s eyes.
+      </p>
+      <p className="mt-[10%] text-[3cqw] font-semibold uppercase tracking-[0.3em] text-ink/55">— {site.author}</p>
+    </div>
   );
 }

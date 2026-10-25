@@ -14,24 +14,24 @@ export default function OpengraphImage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: "#FAF6EE",
+          background: "#180E29",
           padding: "72px 84px",
           fontFamily: "Georgia, serif",
-          color: "#1F1B18",
+          color: "#FAF7F2",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 20, fontSize: 22, letterSpacing: 6, color: "#7A2E35" }}>
-          <div style={{ width: 60, height: 2, background: "#7A2E35" }} />
+        <div style={{ display: "flex", alignItems: "center", gap: 20, fontSize: 22, letterSpacing: 6, color: "#C8ACEF" }}>
+          <div style={{ width: 60, height: 2, background: "#C8ACEF" }} />
           A BOOK BY SHARON L. KALEMKIARIAN
         </div>
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div style={{ fontSize: 108, lineHeight: 1, letterSpacing: -2 }}>What I Want to Tell You</div>
-          <div style={{ fontSize: 108, lineHeight: 1.05, fontStyle: "italic", color: "#7A2E35" }}>Is...</div>
-          <div style={{ marginTop: 28, fontSize: 40, fontStyle: "italic", color: "#5E554D" }}>
+          <div style={{ fontSize: 108, lineHeight: 1.05, fontStyle: "italic", color: "#C8ACEF" }}>Is...</div>
+          <div style={{ marginTop: 28, fontSize: 40, fontStyle: "italic", color: "#B9A9D6" }}>
             Messages From Your Child About Divorce
           </div>
         </div>
-        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 22, color: "#5E554D" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", fontSize: 22, color: "#B9A9D6" }}>
           <span>Sahag-Mesrob Press West</span>
           <span>Available on Amazon</span>
         </div>

@@ -1,8 +1,7 @@
 import { MotionProvider } from "@/components/MotionProvider";
 import { Navigation } from "@/components/Navigation";
-import { Hero } from "@/components/Hero";
-import { ThemeMarquee } from "@/components/ThemeMarquee";
-import { AboutBook } from "@/components/AboutBook";
+import { Hero, Prologue } from "@/components/Hero";
+import { AboutBook, ConflictQuote } from "@/components/AboutBook";
 import { WhyIWrote } from "@/components/WhyIWrote";
 import { Author } from "@/components/Author";
 import { Legacy } from "@/components/Legacy";
@@ -15,8 +14,9 @@ export default function Home() {
       <Navigation />
       <main id="main">
         <Hero />
-        <ThemeMarquee />
+        <Prologue />
         <AboutBook />
+        <ConflictQuote />
         <WhyIWrote />
         <Author />
         <Legacy />

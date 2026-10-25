@@ -1,121 +1,191 @@
 "use client";
 
-import { motion, useScroll, useSpring } from "framer-motion";
+import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { useRef } from "react";
-import { Reveal, SectionLabel, WordReveal } from "./primitives";
+import { Lines, Reveal, ScrollWords, ease } from "./primitives";
 
-const chapters = [
+const acts = [
   {
+    word: "Advocate",
     place: "In the courtroom",
-    role: "As an advocate",
     text: "Sharon L. Kalemkiarian spent years representing parents and children in family court.",
   },
   {
+    word: "Judge",
     place: "On the bench",
-    role: "As a judge",
     text: "Following her appointment to the bench, she heard directly from children and made decisions involving custody and their well-being.",
   },
   {
+    word: "Mother",
     place: "At home",
-    role: "As a mother",
     text: "She also experienced divorce when her own children were young.",
   },
 ];
 
 export function WhyIWrote() {
-  const trackRef = useRef<HTMLOListElement>(null);
-  const { scrollYProgress } = useScroll({ target: trackRef, offset: ["start 0.7", "end 0.6"] });
-  const line = useSpring(scrollYProgress, { stiffness: 80, damping: 24 });
+  return (
+    <section id="why" data-nav="dark" aria-labelledby="why-heading" className="relative bg-aubergine text-ivory">
+      {/* Opening */}
+      <div className="grain">
+        <div className="page-x relative pb-20 pt-28 lg:pb-28 lg:pt-40">
+          <Reveal y={10} className="flex items-baseline gap-3 text-lavender">
+            <span className="font-display text-xl italic">02</span>
+            <span className="eyebrow">Why She Wrote It</span>
+          </Reveal>
+          <div className="mt-10 grid gap-12 lg:grid-cols-12 lg:items-end">
+            <Lines
+              id="why-heading"
+              label="Why I Wrote This Book"
+              lines={[
+                <>
+                  <em className="text-lavender">Why</em> I Wrote
+                </>,
+                "This Book",
+              ]}
+              lineClassName={(i) => (i === 1 ? "pl-[12vw]" : "")}
+              className="font-display text-[clamp(3.6rem,12vw,13.5rem)] leading-[0.84] tracking-[-0.04em] lg:col-span-9"
+            />
+            <Reveal delay={0.2} className="lg:col-span-3 lg:pb-6">
+              <p className="body-copy text-lavender/90">
+                Her perspective comes from three places at once &mdash; the counsel table, the bench, and her own
+                family.
+              </p>
+            </Reveal>
+          </div>
+        </div>
+      </div>
+
+      <Acts />
+
+      {/* What she learned */}
+      <Learned />
+    </section>
+  );
+}
+
+/* Three acts, travelled sideways on desktop, stacked on mobile */
+function Acts() {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
+  const x = useTransform(scrollYProgress, [0.05, 0.95], ["0%", "-66.6667%"]);
 
   return (
-    <section id="why" aria-labelledby="why-heading" className="grain relative overflow-hidden bg-sand/60">
-      <div className="page-x py-28 lg:py-40">
-        <SectionLabel index="02" label="Why She Wrote It" className="text-burgundy" />
-
-        <div className="mt-12 grid gap-16 lg:grid-cols-12 lg:gap-10">
-          {/* Heading column */}
-          <div className="lg:col-span-5">
-            <div className="lg:sticky lg:top-32">
-              <WordReveal
-                as="h2"
-                id="why-heading"
-                text="Why I Wrote This Book"
-                className="font-display text-[clamp(3rem,6.4vw,6.2rem)] font-light leading-[0.92] tracking-[-0.02em]"
-              />
-              <Reveal delay={0.2}>
-                <p className="mt-10 max-w-sm text-[1.02rem] leading-[1.85] text-ink/75">
-                  Few people have seen divorce from as many sides. Sharon&rsquo;s perspective comes from the counsel
-                  table, the bench &mdash; and her own family.
-                </p>
-              </Reveal>
-            </div>
-          </div>
-
-          {/* Staggered chapters */}
-          <div className="lg:col-span-6 lg:col-start-7">
-            <ol ref={trackRef} className="relative space-y-20 pl-10 sm:pl-14 lg:space-y-28">
-              <span aria-hidden className="absolute left-0 top-2 h-[calc(100%-1rem)] w-px bg-ink/15" />
-              <motion.span
-                aria-hidden
-                className="absolute left-0 top-2 h-[calc(100%-1rem)] w-px origin-top bg-burgundy"
-                style={{ scaleY: line }}
-              />
-              {chapters.map((c, i) => (
-                <li key={c.place} className="relative">
-                  <span
-                    aria-hidden
-                    className="absolute -left-10 top-3 h-2.5 w-2.5 -translate-x-1/2 rounded-full border border-burgundy bg-ivory sm:-left-14"
-                  />
-                  <Reveal className={i === 1 ? "lg:pl-16" : i === 2 ? "lg:pl-8" : ""}>
-                    <p className="eyebrow text-burgundy">{c.role}</p>
-                    <h3 className="mt-3 font-display text-4xl italic sm:text-5xl">{c.place}</h3>
-                    <p className="mt-5 max-w-md text-[1.05rem] leading-[1.8] text-ink/75">{c.text}</p>
-                  </Reveal>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </div>
-
-        {/* What she learned */}
-        <div className="mt-28 grid gap-12 lg:mt-40 lg:grid-cols-12 lg:gap-10">
-          <Reveal className="lg:col-span-7">
-            <p className="font-display text-[clamp(1.9rem,3.6vw,3.2rem)] font-light leading-[1.18]">
-              Her personal and professional experiences showed her how easily a parent&rsquo;s emotional pain can
-              affect a child &mdash; <em className="text-burgundy">even when the parent has the best intentions.</em>
-            </p>
-          </Reveal>
-          <Reveal className="lg:col-span-4 lg:col-start-9 lg:self-end" delay={0.15}>
-            <p className="text-[1.02rem] leading-[1.85] text-ink/75">
-              She wrote the book to help parents recognize how divorce looks and feels from a child&rsquo;s
-              perspective.
-            </p>
-          </Reveal>
-        </div>
-
-        {/* Purpose band */}
-        <Reveal className="mt-24 lg:mt-32">
-          <div className="grid border-y border-ink/20 sm:grid-cols-3">
-            {[
-              ["Not blame.", "The purpose is not to blame parents."],
-              ["Understanding.", "To offer understanding and compassion."],
-              ["Insight.", "And practical insight for the decisions ahead."],
-            ].map(([word, line], i) => (
-              <div
-                key={word}
-                className={`py-10 sm:px-8 ${i > 0 ? "border-t border-ink/20 sm:border-l sm:border-t-0" : ""} ${
-                  i === 0 ? "sm:pl-0" : ""
-                }`}
-              >
-                <p className={`font-display text-4xl lg:text-5xl ${i === 0 ? "text-ink/40 line-through decoration-burgundy/70 decoration-1" : "italic"}`}>
-                  {word}
-                </p>
-                <p className="mt-3 text-sm leading-relaxed text-smoke">{line}</p>
-              </div>
+    <>
+      {/* Desktop: pinned horizontal travel */}
+      <div ref={ref} className="relative hidden h-[300vh] lg:block">
+        <div className="sticky top-0 h-[100svh] overflow-clip border-y border-ivory/10 bg-midnight">
+          <motion.div style={{ x }} className="flex h-full w-[300vw]">
+            {acts.map((a, i) => (
+              <ActPanel key={a.word} act={a} index={i} />
             ))}
-          </div>
-        </Reveal>
+          </motion.div>
+          <ActProgress progress={scrollYProgress} />
+        </div>
       </div>
-    </section>
+
+      {/* Mobile & tablet */}
+      <div className="border-y border-ivory/10 bg-midnight lg:hidden">
+        {acts.map((a, i) => (
+          <div key={a.word} className={`page-x relative overflow-hidden py-20 ${i > 0 ? "border-t border-ivory/10" : ""}`}>
+            <span aria-hidden className="text-outline pointer-events-none absolute -right-4 top-6 select-none font-display text-[28vw] italic leading-none text-lavender/30">
+              {a.word}
+            </span>
+            <Reveal className="relative">
+              <p className="eyebrow text-lavender">
+                {String(i + 1).padStart(2, "0")} — As {a.word === "Advocate" ? "an advocate" : `a ${a.word.toLowerCase()}`}
+              </p>
+              <h3 className="mt-5 font-display text-[3.2rem] italic leading-none">{a.place}</h3>
+              <p className="body-copy mt-6 max-w-md text-ivory/80">{a.text}</p>
+            </Reveal>
+          </div>
+        ))}
+      </div>
+    </>
+  );
+}
+
+function ActPanel({ act, index }: { act: (typeof acts)[number]; index: number }) {
+  return (
+    <div className="relative flex h-full w-screen items-center">
+      <span
+        aria-hidden
+        className="text-outline pointer-events-none absolute left-[6vw] top-1/2 -translate-y-1/2 select-none font-display text-[23vw] italic leading-none text-lavender/25"
+      >
+        {act.word}
+      </span>
+      <div className="relative ml-[46vw] max-w-[34rem] pr-14">
+        <p className="eyebrow text-lavender">
+          Act {["I", "II", "III"][index]} — As {act.word === "Advocate" ? "an advocate" : `a ${act.word.toLowerCase()}`}
+        </p>
+        <h3 className="mt-6 font-display text-[clamp(3.5rem,5.6vw,6.5rem)] italic leading-[0.95]">{act.place}</h3>
+        <p className="mt-8 font-sans text-[1.25rem] leading-[1.7] text-ivory/80">{act.text}</p>
+      </div>
+    </div>
+  );
+}
+
+function ActProgress({ progress }: { progress: MotionValue<number> }) {
+  const width = useTransform(progress, [0.05, 0.95], ["0%", "100%"]);
+  return (
+    <div className="absolute inset-x-14 bottom-10 text-[0.65rem] font-semibold uppercase tracking-[0.3em] text-lavender/70">
+      <div className="mb-4 flex justify-between">
+        <span>I. Advocate</span>
+        <span>II. Judge</span>
+        <span>III. Mother</span>
+      </div>
+      <div className="relative h-px bg-ivory/15">
+        <motion.span style={{ width }} className="absolute inset-y-0 left-0 bg-lavender" />
+      </div>
+    </div>
+  );
+}
+
+function Learned() {
+  const ref = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.8", "end 0.5"] });
+
+  return (
+    <div className="grain">
+      <div className="page-x relative py-28 lg:py-44">
+        <div ref={ref} className="max-w-[78rem]">
+          <p className="font-display text-[clamp(2.2rem,5vw,5.2rem)] leading-[1.06] tracking-[-0.02em]">
+            <ScrollWords
+              text="Her personal and professional experiences showed her how easily a parent’s emotional pain can affect a child — even when the parent has the best intentions."
+              progress={scrollYProgress}
+              accent={["best", "intentions"]}
+            />
+          </p>
+        </div>
+
+        <div className="mt-24 grid gap-12 lg:mt-36 lg:grid-cols-12">
+          <div className="lg:col-span-7">
+            <p className="font-display text-[clamp(3rem,7vw,7rem)] leading-[0.95] tracking-[-0.03em]">
+              <span className="relative inline-block text-ivory/45">
+                Not to blame.
+                <motion.span
+                  aria-hidden
+                  className="absolute left-[-2%] top-[55%] h-[3px] w-[104%] origin-left bg-lavender"
+                  initial={{ scaleX: 0 }}
+                  whileInView={{ scaleX: 1 }}
+                  viewport={{ once: true, margin: "-20% 0px" }}
+                  transition={{ duration: 1.1, ease, delay: 0.3 }}
+                />
+              </span>
+            </p>
+            <Reveal delay={0.4}>
+              <p className="mt-6 font-display text-[clamp(2rem,4vw,3.8rem)] leading-[1.1]">
+                But to offer <em className="text-lavender">understanding</em>, <em className="text-lavender">compassion</em>,
+                and <em className="text-lavender">practical insight</em>.
+              </p>
+            </Reveal>
+          </div>
+          <Reveal delay={0.2} className="lg:col-span-4 lg:col-start-9 lg:self-end">
+            <p className="body-copy border-l border-lavender/40 pl-6 text-ivory/80">
+              She wrote the book to help parents recognize how divorce looks and feels from a child&rsquo;s perspective.
+            </p>
+          </Reveal>
+        </div>
+      </div>
+    </div>
   );
 }
