@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "What I Want to Tell You Is... Messages From Your Child About Divorce — by Sharon L. Kalemkiarian";
+export const alt = "What I Want to Tell You Is... Messages From Your Child About Divorce, by Sharon L. Kalemkiarian";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

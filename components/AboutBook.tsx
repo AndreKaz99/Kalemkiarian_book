@@ -51,7 +51,7 @@ export function AboutBook() {
                   &ldquo;I wrote these messages in the voices of children to help you see your divorce through your
                   child&rsquo;s eyes.&rdquo;
                 </p>
-                <p className="eyebrow mt-5 text-smoke">— {site.author}</p>
+                <p className="eyebrow mt-5 text-smoke">{site.author}</p>
               </Reveal>
               <Folio>i</Folio>
             </motion.article>
@@ -83,7 +83,7 @@ export function AboutBook() {
                   </Reveal>
                   <Reveal as="p" delay={0.15}>
                     Through messages written from a child&rsquo;s perspective, the book helps parents see the divorce
-                    process through their children&rsquo;s eyes &mdash; and make more compassionate decisions.
+                    process through their children&rsquo;s eyes and make more compassionate decisions.
                   </Reveal>
                 </div>
 
@@ -132,7 +132,7 @@ function Folio({ children, right = false }: { children: React.ReactNode; right?:
 
 /* A contents page of the book's themes — summaries, never excerpts */
 function ThroughTheirEyes() {
-  const [openKey, setOpenKey] = useState<string | null>(themes[0].key);
+  const [openKey, setOpenKey] = useState<string | null>(null);
   return (
     <div className="mt-28 grid gap-14 lg:mt-40 lg:grid-cols-12 lg:gap-10 [&>*]:min-w-0">
       <div className="lg:col-span-5">
@@ -212,18 +212,21 @@ function ThroughTheirEyes() {
             );
           })}
         </ul>
-        <Reveal delay={0.1}>
-          <p className="mt-10 font-display text-[1.45rem] leading-relaxed text-aubergine sm:text-[1.7rem]">
-            <span className="eyebrow mb-3 block text-aubergine/60">Co-parenting, explored</span>
+      </div>
+
+      <Reveal delay={0.1} className="lg:col-span-12">
+        <div className="border-t border-aubergine/20 pt-8">
+          <p className="eyebrow mb-4 text-aubergine/60">Co-parenting, explored</p>
+          <p className="font-display text-[1.45rem] leading-relaxed text-aubergine sm:text-[1.7rem] lg:whitespace-nowrap lg:text-[clamp(1.4rem,2.15vw,2.2rem)]">
             {coparentingTopics.map((t, i) => (
               <span key={t} className="inline-block whitespace-nowrap">
                 <em>{t}</em>
-                {i < coparentingTopics.length - 1 && <span className="mx-3 text-violet/60">/</span>}
+                {i < coparentingTopics.length - 1 && <span className="mx-3 text-violet/60 lg:mx-5">/</span>}
               </span>
             ))}
           </p>
-        </Reveal>
-      </div>
+        </div>
+      </Reveal>
     </div>
   );
 }

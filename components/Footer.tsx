@@ -39,7 +39,7 @@ export function Footer() {
       {/* oversized sign-off */}
       <p
         aria-hidden
-        className="pointer-events-none -mb-[0.24em] select-none text-center font-display text-[27vw] italic leading-none tracking-[-0.05em] text-plum/50"
+        className="pointer-events-none select-none pb-[0.08em] pt-6 text-center font-display text-[22vw] italic leading-[0.9] tracking-[-0.05em] text-plum/50"
       >
         Is...
       </p>

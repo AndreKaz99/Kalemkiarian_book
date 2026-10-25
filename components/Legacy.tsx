@@ -110,7 +110,7 @@ function Plates() {
         numeral="II"
         title="Sahag-Mesrob Press West"
         place="San Diego, California"
-        note="The family imprint today — publisher of What I Want to Tell You Is..."
+        note="The family imprint today, and the publisher of What I Want to Tell You Is..."
         offset
       >
         <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#fbf9f4]">

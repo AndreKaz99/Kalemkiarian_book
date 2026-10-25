@@ -18,10 +18,10 @@ import { Arrow, CoverImage } from "./primitives";
  * A collectible hardcover, built from planes in CSS 3D.
  *
  * — follows the pointer with spring physics; light and shadow move with it
- * — hover lifts the book and lets the cover fall ajar
- * — click: the cover swings open, then the title page turns with a real curl
- *   (the leaf is a chain of hinged strips, each bending a little behind the last)
- * — the spread reveals the author's words and a way to buy the book
+ * — hover lifts the book (and, when openable, lets the cover fall ajar)
+ * — when `openable`, a click swings the cover open and the title page turns with a
+ *   real curl (the leaf is a chain of hinged strips, each bending a little behind the
+ *   last), revealing the author's words and a way to buy the book
  *
  * --w is the book's width, --d its thickness.
  */
@@ -30,7 +30,7 @@ const STRIPS = 7;
 const swing = [0.7, 0, 0.25, 1] as const;
 const LEAF_DELAY = 1.05;
 
-export function Book3D({ onOpenChange }: { onOpenChange?: (open: boolean) => void }) {
+export function Book3D({ openable = false, onOpenChange }: { openable?: boolean; onOpenChange?: (open: boolean) => void }) {
   const reduce = useReducedMotion();
   const stageRef = useRef<HTMLDivElement>(null);
   const bookRef = useRef<HTMLDivElement>(null);
@@ -132,10 +132,10 @@ export function Book3D({ onOpenChange }: { onOpenChange?: (open: boolean) => voi
     return () => window.removeEventListener("keydown", onKey);
   }, [open, toggle]);
 
-  const ajar = hover && !open && !closing && !reduce;
+  const ajar = openable && hover && !open && !closing && !reduce;
   const coverAngle = open ? -178.5 : ajar ? -16 : 0;
   const t = (d: number) => (reduce ? 0 : d);
-  const showCursor = fine && hover && (!open || (open && side === "left" && !fit.compact));
+  const showCursor = openable && fine && hover && (!open || (open && side === "left" && !fit.compact));
 
 
   return (
@@ -159,7 +159,7 @@ export function Book3D({ onOpenChange }: { onOpenChange?: (open: boolean) => voi
         />
 
         <motion.div
-          className={`relative ${fine && !open ? "[@media(pointer:fine)]:!cursor-none" : ""}`}
+          className={`relative ${openable && fine && !open ? "[@media(pointer:fine)]:!cursor-none" : ""}`}
           animate={{
             x: open ? fit.x : 0,
             scale: open ? fit.scale : 1,
@@ -171,11 +171,11 @@ export function Book3D({ onOpenChange }: { onOpenChange?: (open: boolean) => voi
           onPointerLeave={() => setHover(false)}
           onClick={(e) => {
             // The ajar cover can sit in front of the hit targets, so the whole book listens.
-            if ((e.target as HTMLElement).closest("a, button")) return;
+            if (!openable || (e.target as HTMLElement).closest("a, button")) return;
             if (!open) toggle(true);
             else if (e.clientX < (bookRef.current?.getBoundingClientRect().left ?? 0)) toggle(false);
           }}
-          style={{ rotateX, rotateY, transformStyle: "preserve-3d", cursor: open ? "auto" : "pointer" }}
+          style={{ rotateX, rotateY, transformStyle: "preserve-3d", cursor: openable && !open ? "pointer" : "auto" }}
         >
           <div
             ref={bookRef}
@@ -244,7 +244,7 @@ export function Book3D({ onOpenChange }: { onOpenChange?: (open: boolean) => voi
                 </p>
                 <p className="mt-[8%] text-[4.1cqw] leading-[1.6] text-ink/75">
                   Written in the voices of children, these messages help parents hear what their children struggle to
-                  say — and make more compassionate decisions on their behalf.
+                  say, and make more compassionate decisions on their behalf.
                 </p>
                 <div className="mt-auto space-y-[5%]">
                   <a
@@ -344,7 +344,7 @@ export function Book3D({ onOpenChange }: { onOpenChange?: (open: boolean) => voi
           </div>
 
           {/* Interaction targets */}
-          {!open ? (
+          {!openable ? null : !open ? (
             <button
               type="button"
               onClick={() => toggle(true)}
@@ -367,6 +367,7 @@ export function Book3D({ onOpenChange }: { onOpenChange?: (open: boolean) => voi
       </div>
 
       {/* caption */}
+      {openable && (
       <div className="relative z-10 mt-6 flex items-center gap-5 text-[0.66rem] font-semibold uppercase tracking-[0.3em] text-lavender/80">
         <button
           type="button"
@@ -380,6 +381,7 @@ export function Book3D({ onOpenChange }: { onOpenChange?: (open: boolean) => voi
           {open ? "Close the book" : fine ? "Click the book to open" : "Tap the book to open"}
         </button>
       </div>
+      )}
 
       {/* contextual cursor */}
       <AnimatePresence>
@@ -475,7 +477,7 @@ function Verso() {
       <p className="mt-[4%] font-display text-[8.4cqw] italic leading-[1.16]">
         I wrote these messages in the voices of children to help you see your divorce through your child&rsquo;s eyes.
       </p>
-      <p className="mt-[10%] text-[3cqw] font-semibold uppercase tracking-[0.3em] text-ink/55">— {site.author}</p>
+      <p className="mt-[10%] text-[3cqw] font-semibold uppercase tracking-[0.3em] text-ink/55">{site.author}</p>
     </div>
   );
 }

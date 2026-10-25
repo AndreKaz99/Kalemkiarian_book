@@ -34,7 +34,7 @@ export const assets = {
   },
   titlePage: {
     src: "/images/title-page.jpg",
-    alt: "Title page of What I Want to Tell You Is... — Sahag-Mesrob Press West, San Diego, California",
+    alt: "Title page of What I Want to Tell You Is..., Sahag-Mesrob Press West, San Diego, California",
   },
   authorPortrait: {
     src: "/images/sharon-kalemkiarian.jpg" as string | null, // replace with a higher-resolution photo when available
@@ -49,8 +49,8 @@ export const assets = {
 export const nav = [
   { label: "Home", href: "#home" },
   { label: "The Book", href: "#the-book" },
-  { label: "Why She Wrote It", href: "#why" },
   { label: "About the Author", href: "#author" },
+  { label: "Why She Wrote It", href: "#why" },
   { label: "Our Publishing Legacy", href: "#legacy" },
 ];
 
@@ -60,14 +60,14 @@ export const themes = [
     title: "The weight of conflict",
     summary: "The emotional impact of parental conflict",
     body:
-      "Children feel the tension between their parents long before they can name it. The book considers how disagreement, even when unspoken, settles on a child — and why an end to the conflict matters so deeply to them.",
+      "Children feel the tension between their parents long before they can name it. The book considers how disagreement, even when unspoken, settles on a child, and why an end to the conflict matters so deeply to them.",
   },
   {
     key: "listening",
     title: "Learning to listen",
     summary: "Hearing what children struggle to say",
     body:
-      "Confused, frightened, or afraid of upsetting a parent, children often stay silent — or speak through their behavior instead. The messages invite parents to listen for what lies beneath.",
+      "Confused, frightened, or afraid of upsetting a parent, children often stay silent, or speak through their behavior instead. The messages invite parents to listen for what lies beneath.",
   },
   {
     key: "coparenting",
@@ -81,7 +81,7 @@ export const themes = [
     title: "Safe & loved",
     summary: "Helping children feel protected by both parents",
     body:
-      "Beneath every message is a simple wish — to feel loved and protected by both parents. The book helps parents make more compassionate choices with that wish in mind.",
+      "Beneath every message is a simple wish: to feel loved and protected by both parents. The book helps parents make more compassionate choices with that wish in mind.",
   },
 ];
 

@@ -38,7 +38,7 @@ export function Author() {
       <div ref={ref} className="page-x relative pb-28 pt-24 lg:pb-40 lg:pt-32">
         <div className="flex items-baseline justify-between text-aubergine">
           <Reveal y={10} className="flex items-baseline gap-3">
-            <span className="font-display text-xl italic">03</span>
+            <span className="font-display text-xl italic">02</span>
             <span className="eyebrow">Meet the Author</span>
           </Reveal>
           <Reveal y={10} className="eyebrow hidden text-aubergine/60 sm:block">
@@ -65,7 +65,7 @@ export function Author() {
 
         <div className="relative grid gap-14 lg:grid-cols-12 lg:gap-10">
           {/* Portrait overlaps the name */}
-          <div className="relative z-10 order-1 -mt-[4vw] lg:order-2 lg:col-span-6 lg:col-start-7 lg:-mt-[7vw]">
+          <div className="relative z-10 order-1 mt-10 lg:order-2 lg:col-span-6 lg:col-start-7 lg:mt-14">
             <motion.figure style={{ y: photoY }} className="relative ml-auto max-w-[560px]">
               <div className="relative">
               <div aria-hidden className="absolute -bottom-4 -left-4 h-full w-full border border-violet/60" />

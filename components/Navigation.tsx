@@ -77,7 +77,7 @@ export function Navigation() {
       <nav aria-label="Primary" className="page-x flex h-16 items-center justify-between gap-6 lg:h-[4.5rem]">
         <a href="#home" onClick={() => setMenuOpen(false)} className="relative z-[60] font-display text-[1.35rem] leading-none tracking-tight">
           What I Want to Tell You <em className={light ? "text-violet" : "text-lavender"}>Is...</em>
-          <span className="sr-only"> — home</span>
+          <span className="sr-only"> (home)</span>
         </a>
 
         <ul className="hidden items-center gap-7 xl:flex xl:gap-9">

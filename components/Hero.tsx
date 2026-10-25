@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { site } from "@/lib/site";
 import { AmazonButton, ScrollWords, TextLink, ease } from "./primitives";
 import { Book3D } from "./Book3D";
@@ -25,7 +25,6 @@ function MaskLine({ children, delay, className = "" }: { children: React.ReactNo
 
 export function Hero() {
   const ref = useRef<HTMLElement>(null);
-  const [bookOpen, setBookOpen] = useState(false);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const titleY = useTransform(scrollYProgress, [0, 1], [0, -90]);
   const lightOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
@@ -38,17 +37,7 @@ export function Hero() {
       aria-label="What I Want to Tell You Is..."
       className="grain relative overflow-clip bg-midnight text-ivory lg:h-[100svh] lg:min-h-[760px]"
     >
-      {/* Stage lighting: one soft violet cone falling on the book */}
-      <motion.div aria-hidden style={{ opacity: lightOpacity }} className="pointer-events-none absolute inset-0">
-        <motion.div
-          className="absolute -top-[10%] left-[40%] h-[120%] w-[70%] origin-top bg-gradient-to-b from-violet/35 via-violet/10 to-transparent blur-3xl lg:left-[48%] lg:w-[48%]"
-          style={{ clipPath: "polygon(42% 0, 58% 0, 100% 100%, 0 100%)" }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 2.4, delay: 0.6 }}
-        />
-        <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-black/40 to-transparent" />
-      </motion.div>
+      <div aria-hidden className="pointer-events-none absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-black/40 to-transparent" />
 
       {/* Editorial column rules */}
       <div aria-hidden className="pointer-events-none absolute inset-0 hidden lg:block">
@@ -58,7 +47,7 @@ export function Hero() {
       </div>
 
       <h1 className="sr-only">
-        {site.title} {site.subtitle} — by {site.author}
+        {site.title} {site.subtitle}, by {site.author}
       </h1>
 
       <div className="page-x relative h-full pb-14 pt-28 lg:pb-0 lg:pt-0">
@@ -77,8 +66,6 @@ export function Hero() {
         <motion.div
           aria-hidden
           style={{ y: titleY }}
-          animate={{ opacity: bookOpen ? 0.14 : 1 }}
-          transition={{ opacity: { duration: 0.9, ease } }}
           className={`relative z-10 mt-10 font-display leading-[0.84] tracking-[-0.035em] lg:absolute lg:left-14 lg:top-[18vh] lg:mt-0 ${titleSize}`}
         >
           <MaskLine delay={0.25}>What I</MaskLine>
@@ -93,12 +80,23 @@ export function Hero() {
 
         {/* The book */}
         <div className="relative z-20 mt-6 lg:absolute lg:right-[4vw] lg:top-[53%] lg:mt-0 lg:w-[44vw] lg:-translate-y-1/2">
+          {/* Stage lighting: one soft violet cone, centred on the book it showcases */}
+          <motion.div aria-hidden style={{ opacity: lightOpacity }} className="pointer-events-none absolute inset-x-0 bottom-[6%] top-[-100vh]">
+            <motion.div
+              className="absolute inset-y-0 left-1/2 w-[170%] -translate-x-1/2 bg-gradient-to-b from-violet/35 via-violet/12 to-transparent blur-3xl lg:w-[130%]"
+              style={{ clipPath: "polygon(44% 0, 56% 0, 100% 100%, 0 100%)" }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 2.4, delay: 0.6 }}
+            />
+          </motion.div>
           <motion.div
+            className="relative"
             initial={{ opacity: 0, y: 80, rotateZ: 4 }}
             animate={{ opacity: 1, y: 0, rotateZ: 0 }}
             transition={{ duration: 1.8, ease, delay: 0.55 }}
           >
-            <Book3D onOpenChange={setBookOpen} />
+            <Book3D />
           </motion.div>
         </div>
 
@@ -107,8 +105,8 @@ export function Hero() {
           aria-hidden
           className={`pointer-events-none absolute bottom-[7vh] left-[40vw] z-30 hidden font-display italic leading-none tracking-[-0.03em] text-lavender lg:block ${titleSize}`}
           initial={{ opacity: 0, x: -40 }}
-          animate={{ opacity: bookOpen ? 0 : 1, x: 0 }}
-          transition={{ duration: 1.3, ease, delay: bookOpen ? 0 : 0.95 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1.3, ease, delay: 0.95 }}
           style={{ fontSize: "clamp(8rem, 15vw, 17rem)" }}
         >
           Is...
@@ -118,8 +116,8 @@ export function Hero() {
         <motion.div
           className="relative z-20 mt-12 max-w-md lg:absolute lg:bottom-[9vh] lg:left-14 lg:mt-0 lg:max-w-[30vw]"
           initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: bookOpen ? 0.15 : 1, y: 0 }}
-          transition={{ duration: 1.1, ease, delay: bookOpen ? 0 : 1.1 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.1, ease, delay: 1.1 }}
         >
           <p className="font-display text-[1.9rem] italic leading-[1.1] text-ivory sm:text-[2.2rem]">
             Messages From Your Child About Divorce

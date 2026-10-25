@@ -26,7 +26,7 @@ All images live in `public/images/` and are referenced from `lib/site.ts` → `a
 | --- | --- | --- |
 | Front cover | `book-cover.jpg` | 3D book (hero), purchase section |
 | Back cover | `book-back-cover.jpg` | 3D book's back, purchase section |
-| Title page | `title-page.jpg` | first page revealed when the 3D book opens |
+| Title page | `title-page.jpg` | Publishing legacy section (Plate II) |
 | Author portrait | `sharon-kalemkiarian.jpg` | About the Author |
 | Archival press photo (optional) | not yet provided: set `assets.pressArchive.src` | Legacy section |
 
@@ -37,13 +37,12 @@ If you add a custom domain, update `site.url` in `lib/site.ts` (used for the can
 ## Editing content
 
 - **Copy, links, nav, themes:** `lib/site.ts`
-- **Sections (in page order):** `components/` — `Hero` (hero + prologue), `Book3D` (the interactive book), `AboutBook` (open-spread layout, themes, and the pinned "heart of the book" quote), `WhyIWrote`, `Author`, `Legacy`, `Purchase`, `Footer`, `Navigation`
+- **Sections (in page order):** `components/`: `Hero` (hero + prologue), `Book3D` (the interactive book), `AboutBook` (open-spread layout, themes, and the pinned "heart of the book" quote), `Author`, `WhyIWrote`, `Legacy`, `Purchase`, `Footer`, `Navigation`
 - **Design system:** purple palette and fonts (Instrument Serif, Manrope, IM Fell English) in `tailwind.config.ts`, `app/layout.tsx` and `app/globals.css`
 - **Shared pieces (buttons, reveal animations, placeholders):** `components/primitives.tsx`
 - **SEO / social card:** `app/layout.tsx`, `app/opengraph-image.tsx`
 
 ## Notes
 
-- Respects `prefers-reduced-motion` (Framer `MotionConfig reducedMotion="user"`; pointer tilt and the page-turn animation are disabled).
-- Pointer tilt only runs on fine pointers; on narrow screens the open book shows its right-hand page at full size.
-- The open book shows the author's own description of the book and an introduction drawn from the book's description — no invented excerpts.
+- Respects `prefers-reduced-motion` (Framer `MotionConfig reducedMotion="user"`; pointer tilt is disabled).
+- The hero book tilts toward the pointer but does not open. The opening and page-turn interaction is still built into `Book3D` and can be switched back on with `<Book3D openable />`.

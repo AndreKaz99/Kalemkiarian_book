@@ -26,14 +26,14 @@ const press = IM_Fell_English({
   display: "swap",
 });
 
-const fullTitle = `${site.title} ${site.subtitle} — ${site.author}`;
+const fullTitle = `${site.title} ${site.subtitle} | ${site.author}`;
 
 export const metadata: Metadata = {
   // Origin only: Next adds the base path to generated image URLs itself
   metadataBase: new URL(new URL(site.url).origin),
   title: {
     default: fullTitle,
-    template: `%s — ${site.title}`,
+    template: `%s | ${site.title}`,
   },
   description: site.description,
   keywords: [

@@ -17,8 +17,8 @@ export default function Home() {
         <Prologue />
         <AboutBook />
         <ConflictQuote />
-        <WhyIWrote />
         <Author />
+        <WhyIWrote />
         <Legacy />
         <Purchase />
       </main>
