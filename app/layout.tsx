@@ -29,7 +29,8 @@ const press = IM_Fell_English({
 const fullTitle = `${site.title} ${site.subtitle} — ${site.author}`;
 
 export const metadata: Metadata = {
-  metadataBase: new URL(site.url),
+  // Origin only: Next adds the base path to generated image URLs itself
+  metadataBase: new URL(new URL(site.url).origin),
   title: {
     default: fullTitle,
     template: `%s — ${site.title}`,
@@ -48,10 +49,10 @@ export const metadata: Metadata = {
   authors: [{ name: site.author }],
   creator: site.author,
   publisher: site.publisher,
-  alternates: { canonical: "/" },
+  alternates: { canonical: site.url },
   openGraph: {
     type: "website",
-    url: "/",
+    url: site.url,
     siteName: site.title,
     title: fullTitle,
     description: site.description,

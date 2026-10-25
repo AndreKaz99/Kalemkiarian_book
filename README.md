@@ -12,7 +12,11 @@ npm run dev      # http://localhost:3000
 npm run build && npm start
 ```
 
-Deploys as-is to Vercel (or any Node host).
+## Live site
+
+**https://andrekaz99.github.io/Kalemkiarian_book/**
+
+Hosted on GitHub Pages. Every push to `claude/clever-cori-b61vqh` rebuilds and republishes the site automatically (`.github/workflows/pages.yml`). Progress shows under the repository's **Actions** tab.
 
 ## Replacing the placeholder images
 
@@ -31,9 +35,9 @@ The site ships with clearly labelled placeholders. To use the real assets:
 bookCover: { src: "/images/book-cover.jpg", alt: "..." },
 ```
 
-The cover is used in the hero 3D book and the purchase section; images are served through `next/image` (AVIF/WebP, responsive sizes).
+The cover is used in the hero 3D book and the purchase section; images are rendered with `next/image` (lazy-loaded, responsive sizes).
 
-Also set `site.url` in `lib/site.ts` to the live domain (used for the canonical URL, sitemap and social previews).
+If you add a custom domain, update `site.url` in `lib/site.ts` (used for the canonical URL, sitemap and social previews).
 
 ## Editing content
 

@@ -2,7 +2,7 @@
 
 import { motion, type Variants } from "framer-motion";
 import Image from "next/image";
-import { AMAZON_URL, assets, site } from "@/lib/site";
+import { AMAZON_URL, assets, site, withBasePath } from "@/lib/site";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -195,7 +195,7 @@ export function CoverArt({ priority = false, sizes = "(max-width: 768px) 70vw, 4
   if (assets.bookCover.src) {
     return (
       <Image
-        src={assets.bookCover.src}
+        src={withBasePath(assets.bookCover.src)}
         alt={assets.bookCover.alt}
         fill
         priority={priority}
@@ -261,7 +261,7 @@ export function ImageSlot({
   if (src) {
     return (
       <div className={`relative overflow-hidden ${className}`}>
-        <Image src={src} alt={alt} fill sizes={sizes} className="object-cover" />
+        <Image src={withBasePath(src)} alt={alt} fill sizes={sizes} className="object-cover" />
       </div>
     );
   }

@@ -6,7 +6,7 @@
 export const AMAZON_URL = "https://www.amazon.com/What-Want-Tell-You-Messages/dp/B0HJ6VY2RB";
 
 export const site = {
-  url: "https://www.whatiwanttotellyouis.com", // TODO: replace with the live domain
+  url: "https://andrekaz99.github.io/Kalemkiarian_book", // live address — update if a custom domain is added
   title: "What I Want to Tell You Is...",
   subtitle: "Messages From Your Child About Divorce",
   author: "Sharon L. Kalemkiarian",
@@ -14,6 +14,9 @@ export const site = {
   description:
     "A powerful collection of messages that invites parents to experience divorce through the eyes of their children. By Sharon L. Kalemkiarian.",
 };
+
+/** Prefixes a /public path with the deployment base path (needed for GitHub Pages). */
+export const withBasePath = (path: string) => `${process.env.NEXT_PUBLIC_BASE_PATH || ""}${path}`;
 
 /**
  * Image assets.
