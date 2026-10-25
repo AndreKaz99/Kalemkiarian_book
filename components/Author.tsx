@@ -175,7 +175,7 @@ function Perspective() {
         <span className="sr-only">A perspective shaped as a judge, an attorney, an educator, and a mother.</span>
         <span aria-hidden>
           A perspective shaped as{" "}
-          <span className="relative inline-flex h-[1.15em] overflow-hidden align-bottom">
+          <span className="relative inline-flex h-[1.15em] overflow-hidden pr-[0.15em] align-bottom">
             <AnimatePresence mode="popLayout" initial={false}>
               <motion.em
                 key={perspectives[i]}

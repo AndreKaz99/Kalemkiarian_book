@@ -85,7 +85,7 @@ export function Lines({
         <span
           key={i}
           aria-hidden
-          className={`-mb-[0.14em] block overflow-hidden pb-[0.14em] ${
+          className={`-mb-[0.14em] block overflow-hidden pb-[0.14em] pr-[0.2em] ${
             typeof lineClassName === "function" ? lineClassName(i) : lineClassName
           }`}
         >

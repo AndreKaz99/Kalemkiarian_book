@@ -10,7 +10,7 @@ const titleSize = "text-[clamp(4.1rem,17.5vw,7.5rem)] lg:text-[clamp(6rem,10.6vw
 
 function MaskLine({ children, delay, className = "" }: { children: React.ReactNode; delay: number; className?: string }) {
   return (
-    <span className={`-mb-[0.12em] block overflow-hidden pb-[0.12em] ${className}`}>
+    <span className={`-mb-[0.12em] block overflow-hidden pb-[0.12em] pr-[0.2em] ${className}`}>
       <motion.span
         className="block"
         initial={{ y: "110%" }}
