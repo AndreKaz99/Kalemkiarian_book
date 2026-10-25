@@ -73,7 +73,7 @@ export function Hero() {
           className={`relative z-10 mt-10 font-display leading-[0.84] tracking-[-0.035em] lg:absolute lg:left-14 lg:top-[18vh] lg:mt-0 ${titleSize}`}
         >
           <MaskLine delay={0.25}>What I</MaskLine>
-          <MaskLine delay={0.37} className="pl-[11vw] lg:pl-[8.5vw]">
+          <MaskLine delay={0.37} className="pl-[11vw] lg:pl-[min(8.5vw,8rem)]">
             Want <em className="text-lavender">to</em>
           </MaskLine>
           <MaskLine delay={0.49}>Tell You</MaskLine>
@@ -83,7 +83,7 @@ export function Hero() {
         </motion.div>
 
         {/* The book */}
-        <div className="relative z-20 mt-6 lg:absolute lg:right-[4vw] lg:top-[53%] lg:mt-0 lg:w-[44vw] lg:-translate-y-1/2">
+        <div className="relative z-20 mt-6 lg:absolute lg:right-[min(4vw,4rem)] lg:top-[53%] lg:mt-0 lg:w-[min(44vw,42rem)] lg:-translate-y-1/2">
           {/* Stage lighting: one soft violet cone, centred on the book it showcases */}
           <motion.div aria-hidden style={{ opacity: lightOpacity }} className="pointer-events-none absolute inset-x-0 bottom-[6%] top-[-100vh]">
             <motion.div
@@ -102,23 +102,27 @@ export function Hero() {
           >
             <Book3D />
           </motion.div>
-        </div>
 
-        {/* "Is..." — sits in front of the book on desktop */}
-        <motion.span
-          aria-hidden
-          className={`pointer-events-none absolute bottom-[7vh] left-[40vw] z-30 hidden font-display italic leading-none tracking-[-0.03em] text-lavender lg:block ${titleSize}`}
-          initial={{ opacity: 0, x: -40 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1.3, ease, delay: 0.95 }}
-          style={{ fontSize: "clamp(8rem, 15vw, 17rem)" }}
-        >
-          Is...
-        </motion.span>
+          {/* "Is..." is anchored to the book itself, so its right edge always stops short of
+              the book's left edge, at any window size */}
+          <motion.span
+            aria-hidden
+            className="pointer-events-none absolute bottom-[10%] z-30 hidden whitespace-nowrap font-display italic leading-none tracking-[-0.03em] text-lavender lg:block"
+            initial={{ opacity: 0, x: -40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1.3, ease, delay: 0.95 }}
+            style={{
+              fontSize: "clamp(7rem, 12vw, 13rem)",
+              right: "calc(50% + clamp(290px, 25vw, 400px) / 2 + 1.5rem)",
+            }}
+          >
+            Is...
+          </motion.span>
+        </div>
 
         {/* Subtitle + actions */}
         <motion.div
-          className="relative z-20 mt-12 max-w-md lg:absolute lg:bottom-[9vh] lg:left-14 lg:mt-0 lg:max-w-[30vw]"
+          className="relative z-20 mt-12 max-w-md lg:absolute lg:bottom-[9vh] lg:left-14 lg:mt-0 lg:max-w-[min(30vw,27rem)]"
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.1, ease, delay: 1.1 }}
