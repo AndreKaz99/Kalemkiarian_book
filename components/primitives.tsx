@@ -98,14 +98,16 @@ export function Lines({
 }
 
 /* ------------------------------------------------------------------ */
-/* ScrollWords — words brighten one by one as the reader scrolls       */
+/* ScrollWords — words brighten one by one as the reader scrolls.      */
+/* The resting state stays above 3:1, so the text is readable before    */
+/* it lights up.                                                        */
 /* ------------------------------------------------------------------ */
 
 export function ScrollWords({
   text,
   progress,
   className = "",
-  dim = 0.14,
+  dim = 0.58,
   accent = [],
   accentClass = "text-lavender italic",
 }: {

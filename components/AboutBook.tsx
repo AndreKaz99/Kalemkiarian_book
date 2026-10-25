@@ -258,13 +258,12 @@ export function ConflictQuote() {
         />
         <motion.blockquote style={{ scale }} className="page-x relative">
           <p className="font-display text-[clamp(3.3rem,10.4vw,11.5rem)] leading-[0.9] tracking-[-0.035em]">
-            <ScrollWords text="Children just want the conflict to end," progress={first} dim={0.1} accent={["conflict"]} />
+            <ScrollWords text="Children just want the conflict to end," progress={first} accent={["conflict"]} />
           </p>
           <p className="mt-8 max-w-4xl font-display text-[clamp(1.9rem,4.2vw,4.4rem)] italic leading-[1.08] text-lavender lg:ml-[16vw] lg:mt-10">
             <ScrollWords
               text="and to be wrapped in the love that only you can offer."
               progress={second}
-              dim={0.08}
               accent={["love"]}
               accentClass="text-ivory"
             />

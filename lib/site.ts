@@ -26,7 +26,7 @@ export const withBasePath = (path: string) => `${process.env.NEXT_PUBLIC_BASE_PA
 export const assets = {
   bookCover: {
     src: "/images/book-cover.jpg" as string | null,
-    alt: "Cover of What I Want to Tell You Is... Messages From Your Child About Divorce by Judge Sharon L. Kalemkiarian",
+    alt: "Cover of What I Want to Tell You Is... by Judge Sharon L. Kalemkiarian",
   },
   bookBackCover: {
     src: "/images/book-back-cover.jpg",
