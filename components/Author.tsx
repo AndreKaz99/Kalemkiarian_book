@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion, useInView, useScroll, useTransform } from "framer-motion";
+import { AnimatePresence, motion, useInView, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { assets, withBasePath } from "@/lib/site";
@@ -145,44 +145,54 @@ export function Author() {
   );
 }
 
-/* "A perspective shaped as a judge / an attorney / an educator / a mother" */
+/*
+ * "A perspective shaped as a judge / an attorney / an educator / a mother"
+ * Loops while on screen. To meet WCAG 2.2.2 it pauses on hover or keyboard focus
+ * and has its own pause button; with reduced motion it stays still.
+ */
 function Perspective() {
-  const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-20% 0px" });
+  const ref = useRef<HTMLParagraphElement>(null);
+  const inView = useInView(ref, { margin: "-10% 0px" });
+  const reduce = useReducedMotion();
   const [i, setI] = useState(0);
-  // Plays through once and settles (well under five seconds), so nothing keeps moving on its own.
+  const [paused, setPaused] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const running = inView && !paused && !hovered && !reduce;
+
   useEffect(() => {
-    if (!inView) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setI(perspectives.length - 1);
-      return;
-    }
-    const id = setInterval(() => {
-      setI((n) => {
-        if (n >= perspectives.length - 1) {
-          clearInterval(id);
-          return n;
-        }
-        return n + 1;
-      });
-    }, 1200);
+    if (!running) return;
+    const id = setInterval(() => setI((n) => (n + 1) % perspectives.length), 2200);
     return () => clearInterval(id);
-  }, [inView]);
+  }, [running]);
+
   return (
     <Reveal>
-      <div ref={ref} />
-      <p className="font-display text-[clamp(2rem,3.4vw,3.2rem)] leading-tight text-aubergine">
+      <p
+        ref={ref}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        onFocus={() => setHovered(true)}
+        onBlur={() => setHovered(false)}
+        className="font-display text-[clamp(2rem,3.4vw,3.2rem)] leading-tight text-aubergine"
+      >
         <span className="sr-only">A perspective shaped as a judge, an attorney, an educator, and a mother.</span>
         <span aria-hidden>
           A perspective shaped as{" "}
-          <span className="relative inline-flex h-[1.15em] overflow-hidden pr-[0.15em] align-bottom">
-            <AnimatePresence mode="popLayout" initial={false}>
+          {/* Invisible copies of every word size the slot and hold the text baseline; the visible
+              word slides inside a clip-path mask (overflow would shift the baseline). */}
+          <span className="relative inline-grid whitespace-nowrap" style={{ clipPath: "inset(-0.15em -0.3em -0.22em -0.1em)" }}>
+            {perspectives.map((p) => (
+              <em key={p} className="invisible [grid-area:1/1]">
+                {p}.
+              </em>
+            ))}
+            <AnimatePresence initial={false}>
               <motion.em
                 key={perspectives[i]}
-                className="block whitespace-nowrap text-violet"
-                initial={{ y: "100%", opacity: 0 }}
-                animate={{ y: "0%", opacity: 1 }}
-                exit={{ y: "-100%", opacity: 0 }}
+                className="absolute left-0 top-0 text-violet"
+                initial={{ y: "115%" }}
+                animate={{ y: "0%" }}
+                exit={{ y: "-115%" }}
                 transition={{ duration: 0.7, ease }}
               >
                 {perspectives[i]}.
@@ -191,6 +201,27 @@ function Perspective() {
           </span>
         </span>
       </p>
+      {!reduce && (
+        <button
+          type="button"
+          onClick={() => setPaused((v) => !v)}
+          onFocus={() => setHovered(true)}
+          onBlur={() => setHovered(false)}
+          aria-label={paused ? "Play the rotating words" : "Pause the rotating words"}
+          className="eyebrow mt-3 inline-flex items-center gap-2 text-aubergine/75 transition-colors hover:text-violet-deep"
+        >
+          {paused ? (
+            <svg width="9" height="9" viewBox="0 0 10 10" aria-hidden>
+              <path d="M2 1l7 4-7 4z" fill="currentColor" />
+            </svg>
+          ) : (
+            <svg width="9" height="9" viewBox="0 0 10 10" aria-hidden>
+              <path d="M2 1h2v8H2zM6 1h2v8H6z" fill="currentColor" />
+            </svg>
+          )}
+          <span aria-hidden>{paused ? "Play" : "Pause"}</span>
+        </button>
+      )}
     </Reveal>
   );
 }
