@@ -38,7 +38,7 @@ export const assets = {
   },
   authorPortrait: {
     src: "/images/sharon-kalemkiarian.jpg" as string | null, // replace with a higher-resolution photo when available
-    alt: "Judge Sharon L. Kalemkiarian smiling, arms folded, in front of framed artwork and Armenian embroidery",
+    alt: "Judge Sharon L. Kalemkiarian, smiling, in front of framed artwork and Armenian embroidery",
   },
   pressArchive: {
     src: null as string | null, // e.g. "/images/sahag-mesrob-press.jpg" — historical photograph, any landscape ratio

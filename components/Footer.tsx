@@ -5,10 +5,10 @@ export function Footer() {
     <footer data-nav="dark" className="relative overflow-clip bg-ink text-ivory">
       <div className="page-x grid gap-12 pb-10 pt-20 lg:grid-cols-12">
         <div className="lg:col-span-5">
-          <p className="font-display text-4xl leading-none">
+          <div className="font-display text-4xl leading-none">
             What I Want to Tell You <em className="text-lavender">Is...</em>
-          </p>
-          <p className="mt-3 font-display text-xl italic text-ivory/60">{site.subtitle}</p>
+          </div>
+          <div className="mt-3 font-display text-xl italic text-ivory/60">{site.subtitle}</div>
         </div>
         <nav aria-label="Footer" className="lg:col-span-4">
           <ul className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm">

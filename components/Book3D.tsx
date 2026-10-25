@@ -224,7 +224,7 @@ export function Book3D({ openable = false, onOpenChange }: { openable?: boolean;
               style={{ width: "var(--d)", left: "calc(var(--d) / -2)", transform: "rotateY(-90deg)" }}
             >
               <span
-                className="whitespace-nowrap font-sans text-[0.55rem] font-semibold uppercase tracking-[0.3em] text-ivory/90"
+                className="whitespace-nowrap font-sans text-[0.75rem] font-semibold uppercase tracking-[0.3em] text-ivory/90"
                 style={{ writingMode: "vertical-rl" }}
               >
                 What I Want to Tell You Is... &nbsp;·&nbsp; Kalemkiarian
@@ -374,7 +374,7 @@ export function Book3D({ openable = false, onOpenChange }: { openable?: boolean;
 
       {/* caption */}
       {openable && (
-      <div className="relative z-10 mt-6 flex items-center gap-5 text-[0.66rem] font-semibold uppercase tracking-[0.3em] text-lavender/80">
+      <div className="relative z-10 mt-6 flex items-center gap-5 text-[0.75rem] font-semibold uppercase tracking-[0.3em] text-lavender/80">
         <button
           type="button"
           onClick={() => toggle(!open)}
@@ -394,7 +394,7 @@ export function Book3D({ openable = false, onOpenChange }: { openable?: boolean;
         {showCursor && (
           <motion.div
             aria-hidden
-            className="pointer-events-none fixed left-0 top-0 z-[80] flex h-[88px] w-[88px] items-center justify-center rounded-full bg-ivory font-sans text-[0.62rem] font-semibold uppercase tracking-[0.28em] text-midnight"
+            className="pointer-events-none fixed left-0 top-0 z-[80] flex h-[88px] w-[88px] items-center justify-center rounded-full bg-ivory font-sans text-[0.75rem] font-semibold uppercase tracking-[0.28em] text-midnight"
             style={{ x: cursorX, y: cursorY, translateX: "-50%", translateY: "-50%" }}
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}

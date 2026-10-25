@@ -108,7 +108,7 @@ function Learned() {
 
         <div className="mt-20 grid gap-12 lg:mt-28 lg:grid-cols-12">
           <div className="lg:col-span-7">
-            <p className="font-display text-[clamp(3rem,7vw,7rem)] leading-[0.95] tracking-[-0.03em]">
+            <div className="font-display text-[clamp(3rem,7vw,7rem)] leading-[0.95] tracking-[-0.03em]">
               <span className="relative inline-block text-ivory/45">
                 Not to blame.
                 <motion.span
@@ -120,7 +120,7 @@ function Learned() {
                   transition={{ duration: 1.1, ease, delay: 0.3 }}
                 />
               </span>
-            </p>
+            </div>
             <Reveal delay={0.4}>
               <p className="mt-6 font-display text-[clamp(2rem,4vw,3.8rem)] leading-[1.1]">
                 But to offer <em className="text-lavender">understanding</em>, <em className="text-lavender">compassion</em>,

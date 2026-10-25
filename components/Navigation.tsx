@@ -87,10 +87,10 @@ export function Navigation() {
       } ${hidden && !menuOpen ? "-translate-y-full" : "translate-y-0"}`}
     >
       <nav aria-label="Primary" className="page-x flex h-16 items-center justify-between gap-6 lg:h-[4.5rem]">
-        <a href="#home" onClick={() => setMenuOpen(false)} className="relative z-[60] font-display text-[1.35rem] leading-none tracking-tight">
+        {/* Wordmark only; "Home" sits right beside it, so a second link here would be redundant */}
+        <span className="relative z-[60] font-display text-[1.35rem] leading-none tracking-tight">
           What I Want to Tell You <em className={light ? "text-violet" : "text-lavender"}>Is...</em>
-          <span className="sr-only"> (home)</span>
-        </a>
+        </span>
 
         <ul className="hidden items-center gap-7 xl:flex xl:gap-9">
           {nav.map((item) => {
@@ -100,7 +100,7 @@ export function Navigation() {
                 <a
                   href={item.href}
                   aria-current={on ? "location" : undefined}
-                  className={`group relative block overflow-hidden py-1 text-[0.68rem] font-semibold uppercase tracking-[0.22em] transition-opacity duration-300 ${
+                  className={`group relative block overflow-hidden py-1 text-[0.75rem] font-semibold uppercase tracking-[0.16em] transition-opacity duration-300 ${
                     on ? "opacity-100" : "opacity-60 hover:opacity-100"
                   }`}
                 >
@@ -125,7 +125,7 @@ export function Navigation() {
             href={AMAZON_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className={`group relative hidden overflow-hidden border px-5 py-2.5 text-[0.66rem] font-semibold uppercase tracking-[0.22em] transition-colors duration-500 sm:inline-flex ${
+            className={`group relative hidden overflow-hidden border px-5 py-2.5 text-[0.75rem] font-semibold uppercase tracking-[0.22em] transition-colors duration-500 sm:inline-flex ${
               light ? "border-ink/70 hover:text-ivory" : "border-ivory/60 hover:text-midnight"
             }`}
           >

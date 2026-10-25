@@ -22,7 +22,7 @@ const config: Config = {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
         press: ["var(--font-press)", "Georgia", "serif"],
       },
-      letterSpacing: { eyebrow: "0.34em" },
+      letterSpacing: { eyebrow: "0.28em" },
       maxWidth: { page: "96rem" },
       transitionTimingFunction: { silk: "cubic-bezier(0.22, 1, 0.36, 1)" },
     },

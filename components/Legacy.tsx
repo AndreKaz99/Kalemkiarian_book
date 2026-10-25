@@ -77,7 +77,6 @@ function Plates() {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start 0.75", "center 0.45"] });
   const draw = useTransform(scrollYProgress, [0, 1], [0, 1]);
-  const labelOpacity = useTransform(scrollYProgress, [0.6, 1], [0, 1]);
 
   return (
     <div ref={ref} className="relative mt-20 grid items-start gap-6 lg:mt-28 lg:grid-cols-[1fr_minmax(8rem,14rem)_1fr] lg:gap-0">
@@ -101,12 +100,11 @@ function Plates() {
           <line x1="1" y1="0" x2="1" y2="100" stroke="rgba(52,27,80,0.18)" strokeWidth="1" vectorEffect="non-scaling-stroke" strokeDasharray="3 4" />
           <motion.line x1="1" y1="0" x2="1" y2="100" stroke="#8254DC" strokeWidth="2" vectorEffect="non-scaling-stroke" style={{ pathLength: draw }} />
         </svg>
-        <motion.p
-          style={{ opacity: labelOpacity }}
+        <p
           className="absolute bg-paper px-3 text-center font-press text-base italic leading-tight text-violet-deep lg:-mt-[18%]"
         >
           carried forward
-        </motion.p>
+        </p>
       </div>
 
       {/* Plate II */}
@@ -225,7 +223,7 @@ function PressInteraction() {
           type="button"
           onClick={() => setPressed((p) => !p)}
           aria-pressed={pressed}
-          className="group mt-6 inline-flex items-center gap-3 text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-violet-deep"
+          className="group mt-6 inline-flex items-center gap-3 text-[0.75rem] font-semibold uppercase tracking-[0.24em] text-violet-deep"
         >
           <span className="relative pb-1">
             {pressed ? "Reset the sheet" : "Pull an impression"}

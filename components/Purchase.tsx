@@ -2,7 +2,7 @@
 
 import { motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
 import { useRef } from "react";
-import { AMAZON_URL, site } from "@/lib/site";
+import { site } from "@/lib/site";
 import { AmazonButton, CoverImage, Lines, Reveal } from "./primitives";
 
 export function Purchase() {
@@ -27,7 +27,7 @@ export function Purchase() {
       {/* poster frame & marginalia */}
       <div aria-hidden className="pointer-events-none absolute inset-3 border border-ivory/10 sm:inset-6" />
       <div className="relative">
-        <div className="page-x flex justify-between pt-12 text-[0.68rem] font-semibold uppercase tracking-[0.3em] text-lavender/80 sm:pt-14">
+        <div className="page-x flex justify-between pt-12 text-[0.75rem] font-semibold uppercase tracking-[0.3em] text-lavender/80 sm:pt-14">
           <span>{site.publisher}</span>
           <span className="hidden sm:inline">Available on Amazon</span>
         </div>
@@ -65,7 +65,7 @@ export function Purchase() {
                   </p>
                   <p className="eyebrow mt-3 text-ivory/55">by Judge {site.author}</p>
                 </div>
-                <AmazonButton tone="violet" large className="w-full shrink-0 whitespace-nowrap !px-6 !text-[0.7rem] sm:w-auto sm:!px-9 sm:!text-[0.8rem]">
+                <AmazonButton tone="violet" large className="w-full shrink-0 whitespace-nowrap !px-6 !text-[0.75rem] sm:w-auto sm:!px-9 sm:!text-[0.8rem]">
                   Get the Book on Amazon
                 </AmazonButton>
               </div>
@@ -77,7 +77,7 @@ export function Purchase() {
           </div>
         </div>
 
-        <div className="page-x flex justify-between pb-12 text-[0.68rem] font-semibold uppercase tracking-[0.3em] text-lavender/80 sm:pb-14">
+        <div className="page-x flex justify-between pb-12 text-[0.75rem] font-semibold uppercase tracking-[0.3em] text-lavender/80 sm:pb-14">
           <span>Messages From Your Child About Divorce</span>
           <span className="hidden sm:inline">Judge {site.author}</span>
         </div>
@@ -86,7 +86,7 @@ export function Purchase() {
   );
 }
 
-/** The book as an object: front cover tilting under the pointer, back cover fanned behind. */
+/** The book as an object: front cover tilting under the pointer, back cover fanned behind. Not a link: the button beside it already goes to Amazon. */
 function PosterBook() {
   const reduce = useReducedMotion();
   const rx = useMotionValue(4);
@@ -94,7 +94,7 @@ function PosterBook() {
   const srx = useSpring(rx, { stiffness: 110, damping: 16 });
   const sry = useSpring(ry, { stiffness: 110, damping: 16 });
 
-  const onMove = (e: React.PointerEvent<HTMLAnchorElement>) => {
+  const onMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (reduce || e.pointerType !== "mouse") return;
     const r = e.currentTarget.getBoundingClientRect();
     ry.set(-20 + ((e.clientX - r.left) / r.width - 0.5) * 26);
@@ -121,10 +121,7 @@ function PosterBook() {
         <div className="absolute inset-0 bg-midnight/30" />
       </motion.div>
 
-      <motion.a
-        href={AMAZON_URL}
-        target="_blank"
-        rel="noopener noreferrer"
+      <motion.div
         onPointerMove={onMove}
         onPointerLeave={reset}
         style={{ rotateX: srx, rotateY: sry, transformStyle: "preserve-3d" }}
@@ -132,9 +129,10 @@ function PosterBook() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 1.3, ease: [0.22, 1, 0.36, 1] }}
+        role="img"
+        aria-label={`${site.title}, front and back covers`}
         className="group relative block aspect-[2/3] w-[min(64vw,330px)] lg:w-[min(28vw,400px)]"
       >
-        <span className="sr-only">Buy {site.title} on Amazon (opens in a new tab)</span>
         <span
           aria-hidden
           className="page-edges absolute left-[calc(100%-15px)] top-[1.5%] h-[97%] w-[26px]"
@@ -146,7 +144,7 @@ function PosterBook() {
           <span aria-hidden className="pointer-events-none absolute inset-y-0 left-[3.2%] w-[3px] bg-gradient-to-r from-black/30 via-white/25 to-transparent" />
           <span aria-hidden className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-transparent to-white/25 opacity-60 transition-opacity duration-700 group-hover:opacity-100" />
         </span>
-      </motion.a>
+      </motion.div>
     </div>
   );
 }

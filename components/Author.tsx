@@ -85,7 +85,7 @@ export function Author() {
                 />
               </motion.div>
               </div>
-              <figcaption className="mt-7 flex items-baseline justify-between text-[0.66rem] font-semibold uppercase tracking-[0.3em] text-smoke">
+              <figcaption className="mt-7 flex items-baseline justify-between text-[0.75rem] font-semibold uppercase tracking-[0.3em] text-smoke">
                 <span>Judge Sharon L. Kalemkiarian</span>
                 <span className="text-violet">Author</span>
               </figcaption>
@@ -130,7 +130,9 @@ export function Author() {
                   <dt className="eyebrow pt-1.5 text-violet">{r.label}</dt>
                   <dd className="space-y-1.5 font-display text-[1.3rem] leading-snug text-ink sm:text-[1.45rem]">
                     {r.items.map((it) => (
-                      <p key={it}>{it}</p>
+                      <span key={it} className="block">
+                        {it}
+                      </span>
                     ))}
                   </dd>
                 </div>

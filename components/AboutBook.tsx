@@ -96,8 +96,8 @@ export function AboutBook() {
                       ["Parent", "through her own divorce"],
                     ].map(([role, note]) => (
                       <li key={role} className="flex-1">
-                        <p className="font-display text-[1.6rem] italic leading-none text-violet">{role}</p>
-                        <p className="mt-2 text-[0.82rem] leading-snug text-smoke">{note}</p>
+                        <span className="block font-display text-[1.6rem] italic leading-none text-violet">{role}</span>
+                        <span className="mt-2 block text-[0.82rem] leading-snug text-smoke">{note}</span>
                       </li>
                     ))}
                   </ul>
@@ -116,7 +116,7 @@ export function AboutBook() {
 
 function RunningHead({ children, side }: { children: React.ReactNode; side: "left" | "right" }) {
   return (
-    <p className={`text-[0.68rem] font-semibold uppercase tracking-[0.34em] text-smoke ${side === "right" ? "lg:text-right" : ""}`}>
+    <p className={`text-[0.75rem] font-semibold uppercase tracking-[0.34em] text-smoke ${side === "right" ? "lg:text-right" : ""}`}>
       {children}
     </p>
   );

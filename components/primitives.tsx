@@ -7,7 +7,8 @@ import { AMAZON_URL, assets, withBasePath } from "@/lib/site";
 export const ease = [0.22, 1, 0.36, 1] as const;
 
 /* ------------------------------------------------------------------ */
-/* Reveal — fades & lifts children into view once                      */
+/* Reveal — lifts and unmasks children into view once. Deliberately no  */
+/* opacity fade, so text is never caught at low contrast mid-animation. */
 /* ------------------------------------------------------------------ */
 
 export function Reveal({
@@ -27,8 +28,8 @@ export function Reveal({
   return (
     <Comp
       className={className}
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ y, clipPath: "inset(0% 0% 100% 0%)" }}
+      whileInView={{ y: 0, clipPath: "inset(0% 0% 0% 0%)", transitionEnd: { clipPath: "none" } }}
       viewport={{ once: true, margin: "-8% 0px" }}
       transition={{ duration: 1.1, ease, delay }}
     >
@@ -186,7 +187,7 @@ export function AmazonButton({
       target="_blank"
       rel="noopener noreferrer"
       className={`group relative inline-flex items-center justify-between gap-8 overflow-hidden font-sans font-semibold uppercase tracking-[0.22em] transition-colors duration-500 ease-silk ${
-        large ? "px-9 py-6 text-[0.8rem]" : "px-7 py-[1.15rem] text-[0.72rem]"
+        large ? "px-9 py-6 text-[0.8rem]" : "px-7 py-[1.15rem] text-[0.75rem]"
       } ${tones[tone]} ${className}`}
     >
       <span
@@ -215,7 +216,7 @@ export function TextLink({
     <a
       href={href}
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-      className={`group inline-flex items-center gap-3 font-sans text-[0.72rem] font-semibold uppercase tracking-[0.22em] ${className}`}
+      className={`group inline-flex items-center gap-3 font-sans text-[0.75rem] font-semibold uppercase tracking-[0.22em] ${className}`}
     >
       <span className="relative pb-1">
         {children}

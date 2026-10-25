@@ -58,7 +58,11 @@ export function Hero() {
           animate={{ opacity: 1 }}
           transition={{ duration: 1.2, delay: 0.2 }}
         >
-          <p className="eyebrow">A book by Judge {site.author}</p>
+          <p className="eyebrow">
+            <a href="#author" className="underline decoration-lavender/40 underline-offset-[5px] transition-colors hover:text-ivory hover:decoration-ivory">
+              A book by Judge {site.author}
+            </a>
+          </p>
           <p className="eyebrow hidden text-right lg:block">{site.publisher}</p>
         </motion.div>
 
@@ -119,9 +123,9 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.1, ease, delay: 1.1 }}
         >
-          <p className="font-display text-[1.9rem] italic leading-[1.1] text-ivory sm:text-[2.2rem]">
+          <div className="font-display text-[1.9rem] italic leading-[1.1] text-ivory sm:text-[2.2rem]">
             Messages From Your Child About Divorce
-          </p>
+          </div>
           <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-5">
             <AmazonButton tone="light">Purchase on Amazon</AmazonButton>
             <TextLink href="#the-book" className="text-ivory">
