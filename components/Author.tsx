@@ -147,8 +147,8 @@ export function Author() {
 
 /*
  * "A perspective shaped as a judge / an attorney / an educator / a mother"
- * Loops while on screen. To meet WCAG 2.2.2 it pauses on hover or keyboard focus
- * and has its own pause button; with reduced motion it stays still.
+ * Loops while on screen. Its Pause/Play button meets WCAG 2.2.2; with reduced
+ * motion it stays still.
  */
 function Perspective() {
   const ref = useRef<HTMLParagraphElement>(null);
@@ -156,12 +156,11 @@ function Perspective() {
   const reduce = useReducedMotion();
   const [i, setI] = useState(0);
   const [paused, setPaused] = useState(false);
-  const [hovered, setHovered] = useState(false);
-  const running = inView && !paused && !hovered && !reduce;
+  const running = inView && !paused && !reduce;
 
   useEffect(() => {
     if (!running) return;
-    const id = setInterval(() => setI((n) => (n + 1) % perspectives.length), 2200);
+    const id = setInterval(() => setI((n) => (n + 1) % perspectives.length), 1400);
     return () => clearInterval(id);
   }, [running]);
 
@@ -169,10 +168,6 @@ function Perspective() {
     <Reveal>
       <p
         ref={ref}
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}
-        onFocus={() => setHovered(true)}
-        onBlur={() => setHovered(false)}
         className="font-display text-[clamp(2rem,3.4vw,3.2rem)] leading-tight text-aubergine"
       >
         <span className="sr-only">A perspective shaped as a judge, an attorney, an educator, and a mother.</span>
@@ -193,7 +188,7 @@ function Perspective() {
                 initial={{ y: "115%" }}
                 animate={{ y: "0%" }}
                 exit={{ y: "-115%" }}
-                transition={{ duration: 0.7, ease }}
+                transition={{ duration: 0.5, ease }}
               >
                 {perspectives[i]}.
               </motion.em>
@@ -205,8 +200,6 @@ function Perspective() {
         <button
           type="button"
           onClick={() => setPaused((v) => !v)}
-          onFocus={() => setHovered(true)}
-          onBlur={() => setHovered(false)}
           aria-label={paused ? "Play the rotating words" : "Pause the rotating words"}
           className="eyebrow mt-3 inline-flex items-center gap-2 text-aubergine/75 transition-colors hover:text-violet-deep"
         >
