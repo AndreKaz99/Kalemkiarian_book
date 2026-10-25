@@ -47,7 +47,7 @@ export function Purchase() {
                   Everything.
                 </em>,
               ]}
-              className="font-display text-[clamp(3.4rem,9.2vw,10rem)] leading-[0.86] tracking-[-0.04em]"
+              className="font-display text-[clamp(3.4rem,9.2vw,10rem)] leading-[0.98] tracking-[-0.04em]"
             />
             <Reveal delay={0.2}>
               <p className="body-copy mt-12 max-w-xl text-ivory/80">

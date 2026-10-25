@@ -145,7 +145,7 @@ function ThroughTheirEyes() {
               <em className="text-violet">Their</em> Eyes
             </>,
           ]}
-          className="font-display text-[clamp(3.4rem,7vw,7.4rem)] leading-[0.88] tracking-[-0.03em] text-aubergine"
+          className="font-display text-[clamp(3.4rem,7vw,7.4rem)] leading-[1.02] tracking-[-0.03em] text-aubergine"
         />
         <Reveal delay={0.15}>
           <p className="body-copy mt-8 max-w-sm text-ink/70">

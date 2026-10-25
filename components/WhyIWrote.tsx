@@ -41,7 +41,7 @@ export function WhyIWrote() {
               "This Book",
             ]}
             lineClassName={(i) => (i === 1 ? "pl-[12vw]" : "")}
-            className="font-display text-[clamp(3.6rem,12vw,13.5rem)] leading-[0.84] tracking-[-0.04em] lg:col-span-9"
+            className="font-display text-[clamp(3.6rem,12vw,13.5rem)] leading-[0.98] tracking-[-0.04em] lg:col-span-9"
           />
           <Reveal delay={0.2} className="lg:col-span-3 lg:pb-6">
             <p className="body-copy text-lavender/90">
