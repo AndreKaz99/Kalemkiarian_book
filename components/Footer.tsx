@@ -36,14 +36,6 @@ export function Footer() {
         </div>
       </div>
 
-      {/* oversized sign-off */}
-      <p
-        aria-hidden
-        className="pointer-events-none select-none pb-[0.08em] pt-6 text-center font-display text-[22vw] italic leading-[0.9] tracking-[-0.05em] text-plum/50"
-      >
-        Is...
-      </p>
-
       <div className="page-x relative z-10 flex flex-col gap-2 border-t border-ivory/10 bg-ink py-6 text-xs text-ivory/45 sm:flex-row sm:justify-between">
         <p>
           © {new Date().getFullYear()} {site.author}. All rights reserved.
