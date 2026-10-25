@@ -9,7 +9,8 @@ import {
   useTransform,
 } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { AMAZON_URL, site } from "@/lib/site";
+import Image from "next/image";
+import { AMAZON_URL, assets, site, withBasePath } from "@/lib/site";
 import { Arrow, CoverArt } from "./primitives";
 
 /**
@@ -139,9 +140,17 @@ export function Book3D() {
           >
             {/* Back cover */}
             <div
-              className="absolute inset-0 rounded-r-[4px] rounded-l-[2px] bg-[#2b2622] shadow-2xl"
-              style={{ transform: "translateZ(calc(var(--d) / -2))" }}
-            />
+              className="absolute inset-0 overflow-hidden rounded-r-[4px] rounded-l-[2px] bg-[#3f3a6b] shadow-2xl"
+              style={{ transform: "translateZ(calc(var(--d) / -2)) rotateY(180deg)" }}
+            >
+              <Image
+                src={withBasePath(assets.bookBackCover.src)}
+                alt=""
+                fill
+                sizes="(max-width: 640px) 62vw, 360px"
+                className="object-cover"
+              />
+            </div>
 
             {/* Page edges — fore-edge, head, tail */}
             <div
@@ -174,7 +183,7 @@ export function Book3D() {
 
             {/* Spine */}
             <div
-              className="absolute top-0 flex h-full items-center justify-center bg-gradient-to-r from-[#1c1815] via-[#3a322c] to-[#1c1815]"
+              className="absolute top-0 flex h-full items-center justify-center bg-gradient-to-r from-[#35305c] via-[#5e588e] to-[#35305c]"
               style={{
                 width: "var(--d)",
                 left: "calc(var(--d) / -2)",
@@ -242,16 +251,18 @@ export function Book3D() {
                 className="absolute inset-0 origin-left"
                 style={{ transformStyle: "preserve-3d" }}
                 animate={{ rotateY: leafAngle }}
-                transition={{ duration: reduce ? 0 : 1.5, ease: turnEase, delay: open ? 0.45 : 0 }}
+                transition={{ duration: reduce ? 0 : 1.5, ease: turnEase, delay: open ? 1.6 : 0 }}
               >
-                {/* recto: half-title */}
-                <div
-                  className="absolute inset-0 flex flex-col items-center justify-center bg-[#f7f1e4] text-center"
-                  style={{ backfaceVisibility: "hidden", containerType: "inline-size" }}
-                >
-                  <p className="font-display text-[6.5cqw] italic text-ink/80">What I Want to Tell You Is...</p>
-                  <span className="mt-[6%] h-px w-[14%] bg-ink/30" />
-                  <TurnShade open={open} delay={0.45} />
+                {/* recto: the book's actual title page */}
+                <div className="absolute inset-0 bg-[#f7f1e4]" style={{ backfaceVisibility: "hidden" }}>
+                  <Image
+                    src={withBasePath(assets.titlePage.src)}
+                    alt={assets.titlePage.alt}
+                    fill
+                    sizes="(max-width: 640px) 62vw, 360px"
+                    className="object-contain p-[4%] mix-blend-multiply"
+                  />
+                  <TurnShade open={open} delay={1.6} />
                 </div>
                 {/* verso: the author's own words */}
                 <div
@@ -299,7 +310,7 @@ export function Book3D() {
                 </div>
                 {/* inside: endpaper */}
                 <div
-                  className="absolute inset-0 overflow-hidden rounded-l-[4px] bg-burgundy-deep"
+                  className="absolute inset-0 overflow-hidden rounded-l-[4px] bg-[#3a3566]"
                   style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
                 >
                   <svg className="absolute inset-0 h-full w-full opacity-20" aria-hidden>

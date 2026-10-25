@@ -18,24 +18,19 @@ npm run build && npm start
 
 Hosted on GitHub Pages. Every push to `claude/clever-cori-b61vqh` rebuilds and republishes the site automatically (`.github/workflows/pages.yml`). Progress shows under the repository's **Actions** tab.
 
-## Replacing the placeholder images
+## Images
 
-The site ships with clearly labelled placeholders. To use the real assets:
+All images live in `public/images/` and are referenced from `lib/site.ts` → `assets`:
 
-1. Put the files in `public/images/`.
-2. Set the matching `src` in `lib/site.ts` → `assets`:
-
-| Asset | Key | Recommended |
+| Image | File | Used in |
 | --- | --- | --- |
-| Book cover | `assets.bookCover.src` | 1600×2400 JPG/PNG (2:3) |
-| Author portrait | `assets.authorPortrait.src` | 1200×1500 JPG (4:5) |
-| Archival press photo (optional) | `assets.pressArchive.src` | landscape JPG |
+| Front cover | `book-cover.jpg` | 3D book (hero), purchase section |
+| Back cover | `book-back-cover.jpg` | 3D book's back, purchase section |
+| Title page | `title-page.jpg` | first page revealed when the 3D book opens |
+| Author portrait | `sharon-kalemkiarian.jpg` | About the Author |
+| Archival press photo (optional) | not yet provided: set `assets.pressArchive.src` | Legacy section |
 
-```ts
-bookCover: { src: "/images/book-cover.jpg", alt: "..." },
-```
-
-The cover is used in the hero 3D book and the purchase section; images are rendered with `next/image` (lazy-loaded, responsive sizes).
+To swap an image, replace the file (same name) or point the `src` at a new file.
 
 If you add a custom domain, update `site.url` in `lib/site.ts` (used for the canonical URL, sitemap and social previews).
 

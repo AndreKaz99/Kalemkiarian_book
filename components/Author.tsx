@@ -10,7 +10,7 @@ const perspectives = ["Judge", "Attorney", "Educator", "Mother"];
 export function Author() {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const imgY = useTransform(scrollYProgress, [0, 1], ["-6%", "6%"]);
+  const imgY = useTransform(scrollYProgress, [0, 1], ["-3%", "3%"]);
 
   return (
     <section id="author" aria-labelledby="author-heading" className="relative bg-ivory">
@@ -27,8 +27,8 @@ export function Author() {
               viewport={{ once: true, margin: "-15% 0px" }}
               transition={{ duration: 1.4, ease: [0.76, 0, 0.24, 1] }}
             >
-              <div className="relative aspect-[4/5] overflow-hidden">
-                <motion.div className="absolute inset-[-6%]" style={{ y: imgY }}>
+              <div className="relative aspect-[40/27] overflow-hidden">
+                <motion.div className="absolute inset-[-4%]" style={{ y: imgY }}>
                   <ImageSlot
                     src={assets.authorPortrait.src}
                     alt={assets.authorPortrait.alt}
@@ -42,7 +42,7 @@ export function Author() {
             </motion.div>
             <div className="mt-4 flex items-center justify-between text-[0.68rem] uppercase tracking-[0.25em] text-smoke">
               <span>{site.author}</span>
-              <span>Author</span>
+              <span>Judge · Author</span>
             </div>
           </div>
 

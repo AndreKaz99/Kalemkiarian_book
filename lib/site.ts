@@ -25,12 +25,20 @@ export const withBasePath = (path: string) => `${process.env.NEXT_PUBLIC_BASE_PA
  */
 export const assets = {
   bookCover: {
-    src: null as string | null, // e.g. "/images/book-cover.jpg" — recommended 1600×2400 (2:3)
-    alt: "Cover of What I Want to Tell You Is... Messages From Your Child About Divorce by Sharon L. Kalemkiarian",
+    src: "/images/book-cover.jpg" as string | null,
+    alt: "Cover of What I Want to Tell You Is... Messages From Your Child About Divorce by Judge Sharon L. Kalemkiarian",
+  },
+  bookBackCover: {
+    src: "/images/book-back-cover.jpg",
+    alt: "Back cover of What I Want to Tell You Is...",
+  },
+  titlePage: {
+    src: "/images/title-page.jpg",
+    alt: "Title page of What I Want to Tell You Is... — Sahag-Mesrob Press West, San Diego, California",
   },
   authorPortrait: {
-    src: null as string | null, // e.g. "/images/sharon-kalemkiarian.jpg" — recommended 1200×1500 (4:5)
-    alt: "Portrait of Sharon L. Kalemkiarian",
+    src: "/images/sharon-kalemkiarian.jpg" as string | null, // replace with a higher-resolution photo when available
+    alt: "Judge Sharon L. Kalemkiarian smiling, arms folded, in front of framed artwork and Armenian embroidery",
   },
   pressArchive: {
     src: null as string | null, // e.g. "/images/sahag-mesrob-press.jpg" — historical photograph, any landscape ratio

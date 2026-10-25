@@ -1,7 +1,8 @@
 "use client";
 
 import { motion, useMotionValue, useReducedMotion, useSpring } from "framer-motion";
-import { AMAZON_URL, site } from "@/lib/site";
+import Image from "next/image";
+import { AMAZON_URL, assets, site, withBasePath } from "@/lib/site";
 import { AmazonButton, CoverArt, Reveal, WordReveal } from "./primitives";
 
 export function Purchase() {
@@ -76,6 +77,17 @@ function TiltCover() {
 
   return (
     <div style={{ perspective: "1600px" }} className="relative">
+      {/* back cover, fanned behind */}
+      <motion.div
+        aria-hidden
+        className="absolute inset-0 overflow-hidden rounded-r-[4px] shadow-[0_30px_60px_-30px_rgba(0,0,0,0.7)]"
+        initial={{ opacity: 0, x: 0, rotate: 0 }}
+        whileInView={{ opacity: 1, x: "-22%", rotate: -7 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
+      >
+        <Image src={withBasePath(assets.bookBackCover.src)} alt="" fill sizes="(max-width: 1024px) 60vw, 320px" className="object-cover brightness-[0.8]" />
+      </motion.div>
       <div aria-hidden className="absolute -bottom-8 left-1/2 h-8 w-3/4 -translate-x-1/2 rounded-[50%] bg-black/50 blur-2xl" />
       <motion.a
         href={AMAZON_URL}
