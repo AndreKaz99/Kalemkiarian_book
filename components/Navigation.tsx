@@ -81,87 +81,90 @@ export function Navigation() {
   const surface = !scrolled || menuOpen ? "bg-transparent" : light ? "bg-ivory/85 backdrop-blur-md" : "bg-midnight/75 backdrop-blur-md";
 
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 transition-[transform,background-color,color] duration-500 ease-silk ${surface} ${
-        light ? "text-ink" : "text-ivory"
-      } ${hidden && !menuOpen ? "-translate-y-full" : "translate-y-0"}`}
-    >
-      <nav aria-label="Primary" className="page-x flex h-16 items-center justify-between gap-6 lg:h-[4.5rem]">
-        {/* Wordmark only; "Home" sits right beside it, so a second link here would be redundant */}
-        <span className="relative z-[60] font-display text-[1.35rem] leading-none tracking-tight">
-          What I Want to Tell You <em className={light ? "text-violet" : "text-lavender"}>Is...</em>
-        </span>
+    <>
+      <header
+        className={`fixed inset-x-0 top-0 z-50 transition-[transform,background-color,color] duration-500 ease-silk ${surface} ${
+          light ? "text-ink" : "text-ivory"
+        } ${hidden && !menuOpen ? "-translate-y-full" : "translate-y-0"}`}
+      >
+        <nav aria-label="Primary" className="page-x flex h-16 items-center justify-between gap-6 lg:h-[4.5rem]">
+          {/* Wordmark only; "Home" sits right beside it, so a second link here would be redundant */}
+          <span className="relative z-[60] font-display text-[1.35rem] leading-none tracking-tight">
+            What I Want to Tell You <em className={light ? "text-violet" : "text-lavender"}>Is...</em>
+          </span>
 
-        <ul className="hidden items-center gap-7 xl:flex xl:gap-9">
-          {nav.map((item) => {
-            const on = active === item.href.slice(1);
-            return (
-              <li key={item.href}>
-                <a
-                  href={item.href}
-                  aria-current={on ? "location" : undefined}
-                  className={`group relative block overflow-hidden py-1 text-[0.75rem] font-semibold uppercase tracking-[0.16em] transition-opacity duration-300 ${
-                    on ? "opacity-100" : "opacity-60 hover:opacity-100"
-                  }`}
-                >
-                  {/* rolling label */}
-                  <span className="block transition-transform duration-500 ease-silk group-hover:-translate-y-full">{item.label}</span>
-                  <span aria-hidden className="absolute left-0 top-full block py-1 transition-transform duration-500 ease-silk group-hover:-translate-y-full">
-                    {item.label}
-                  </span>
-                  <span
-                    className={`absolute bottom-0 left-0 h-px transition-all duration-500 ease-silk ${on ? "w-full" : "w-0"} ${
-                      light ? "bg-violet" : "bg-lavender"
+          <ul className="hidden items-center gap-7 xl:flex xl:gap-9">
+            {nav.map((item) => {
+              const on = active === item.href.slice(1);
+              return (
+                <li key={item.href}>
+                  <a
+                    href={item.href}
+                    aria-current={on ? "location" : undefined}
+                    className={`group relative block overflow-hidden py-1 text-[0.75rem] font-semibold uppercase tracking-[0.16em] transition-opacity duration-300 ${
+                      on ? "opacity-100" : "opacity-60 hover:opacity-100"
                     }`}
-                  />
-                </a>
-              </li>
-            );
-          })}
-        </ul>
+                  >
+                    {/* rolling label */}
+                    <span className="block transition-transform duration-500 ease-silk group-hover:-translate-y-full">{item.label}</span>
+                    <span aria-hidden className="absolute left-0 top-full block py-1 transition-transform duration-500 ease-silk group-hover:-translate-y-full">
+                      {item.label}
+                    </span>
+                    <span
+                      className={`absolute bottom-0 left-0 h-px transition-all duration-500 ease-silk ${on ? "w-full" : "w-0"} ${
+                        light ? "bg-violet" : "bg-lavender"
+                      }`}
+                    />
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
 
-        <div className="flex items-center gap-2">
-          <a
-            href={AMAZON_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`group relative hidden overflow-hidden border px-5 py-2.5 text-[0.75rem] font-semibold uppercase tracking-[0.22em] transition-colors duration-500 sm:inline-flex ${
-              light ? "border-ink/70 hover:text-ivory" : "border-ivory/60 hover:text-midnight"
-            }`}
-          >
-            <span
-              aria-hidden
-              className={`absolute inset-0 origin-bottom scale-y-0 transition-transform duration-500 ease-silk group-hover:scale-y-100 ${
-                light ? "bg-ink" : "bg-ivory"
+          <div className="flex items-center gap-2">
+            <a
+              href={AMAZON_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`group relative hidden overflow-hidden border px-5 py-2.5 text-[0.75rem] font-semibold uppercase tracking-[0.22em] transition-colors duration-500 sm:inline-flex ${
+                light ? "border-ink/70 hover:text-ivory" : "border-ivory/60 hover:text-midnight"
               }`}
-            />
-            <span className="relative">Get the Book</span>
-            <span className="sr-only"> on Amazon (opens in a new tab)</span>
-          </a>
-          <button
-            type="button"
-            ref={toggleRef}
-            className="relative z-[60] -mr-2 flex h-11 w-11 items-center justify-center xl:hidden"
-            aria-expanded={menuOpen}
-            aria-controls="mobile-menu"
-            aria-label={menuOpen ? "Close menu" : "Open menu"}
-            onClick={() => setMenuOpen((o) => !o)}
-          >
-            <span className="relative block h-3 w-7">
-              <span className={`absolute left-0 h-px w-full bg-current transition-all duration-500 ease-silk ${menuOpen ? "top-1.5 rotate-45" : "top-0"}`} />
-              <span className={`absolute right-0 h-px bg-current transition-all duration-500 ease-silk ${menuOpen ? "top-1.5 w-full -rotate-45" : "top-3 w-1/2"}`} />
-            </span>
-          </button>
-        </div>
-      </nav>
+            >
+              <span
+                aria-hidden
+                className={`absolute inset-0 origin-bottom scale-y-0 transition-transform duration-500 ease-silk group-hover:scale-y-100 ${
+                  light ? "bg-ink" : "bg-ivory"
+                }`}
+              />
+              <span className="relative">Get the Book</span>
+              <span className="sr-only"> on Amazon (opens in a new tab)</span>
+            </a>
+            <button
+              type="button"
+              ref={toggleRef}
+              className="relative z-[60] -mr-2 flex h-11 w-11 items-center justify-center xl:hidden"
+              aria-expanded={menuOpen}
+              aria-controls="mobile-menu"
+              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              onClick={() => setMenuOpen((o) => !o)}
+            >
+              <span className="relative block h-3 w-7">
+                <span className={`absolute left-0 h-px w-full bg-current transition-all duration-500 ease-silk ${menuOpen ? "top-1.5 rotate-45" : "top-0"}`} />
+                <span className={`absolute right-0 h-px bg-current transition-all duration-500 ease-silk ${menuOpen ? "top-1.5 w-full -rotate-45" : "top-3 w-1/2"}`} />
+              </span>
+            </button>
+          </div>
+        </nav>
 
-      {/* reading progress */}
-      <motion.div
-        aria-hidden
-        style={{ scaleX: progress }}
-        className={`absolute bottom-0 left-0 h-px w-full origin-left ${light ? "bg-violet" : "bg-lavender"} ${scrolled ? "opacity-100" : "opacity-0"}`}
-      />
+        {/* reading progress */}
+        <motion.div
+          aria-hidden
+          style={{ scaleX: progress }}
+          className={`absolute bottom-0 left-0 h-px w-full origin-left ${light ? "bg-violet" : "bg-lavender"} ${scrolled ? "opacity-100" : "opacity-0"}`}
+        />
+      </header>
 
+      {/* Outside <header>: the header moves (transform), which would trap a fixed overlay inside it */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
@@ -169,7 +172,7 @@ export function Navigation() {
             role="dialog"
             aria-modal="true"
             aria-label="Site menu"
-            className="grain fixed inset-0 z-50 flex flex-col overflow-y-auto bg-midnight text-ivory xl:hidden"
+            className="grain fixed inset-0 z-40 flex flex-col overflow-y-auto bg-midnight text-ivory xl:hidden"
             initial={{ clipPath: "inset(0 0 100% 0)" }}
             animate={{ clipPath: "inset(0 0 0% 0)" }}
             exit={{ clipPath: "inset(0 0 100% 0)" }}
@@ -217,6 +220,6 @@ export function Navigation() {
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </>
   );
 }

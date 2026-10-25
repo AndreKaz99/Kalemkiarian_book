@@ -21,6 +21,11 @@
     outline: 2px solid #9b74e8;
     outline-offset: 3px;
   }
+  /* sections receive focus from in-page links; the scroll itself is the cue */
+  section[tabindex="-1"]:focus,
+  main[tabindex="-1"]:focus {
+    outline: none;
+  }
 }
 
 @layer components {
