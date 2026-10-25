@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useTransform, type MotionValue, type Variants } from "framer-motion";
+import { motion, useReducedMotion, useTransform, type MotionValue, type Variants } from "framer-motion";
 import Image from "next/image";
 import { AMAZON_URL, assets, withBasePath } from "@/lib/site";
 
@@ -117,14 +117,16 @@ export function ScrollWords({
   accentClass?: string;
 }) {
   const words = text.split(" ");
+  const reduce = useReducedMotion();
   return (
-    <span className={className} aria-label={text}>
+    <span className={className}>
+      <span className="sr-only">{text}</span>
       {words.map((w, i) => (
         <Word
           key={i}
           progress={progress}
           range={[i / words.length, (i + 1) / words.length]}
-          dim={dim}
+          dim={reduce ? 1 : dim}
           className={accent.some((a) => w.toLowerCase().replace(/[^a-z]/g, "") === a) ? accentClass : ""}
         >
           {w}
@@ -280,8 +282,8 @@ export function ArchivePlaceholder({ className = "" }: { className?: string }) {
       <div className="absolute inset-[7%] border border-aubergine/25" />
       <div className="absolute inset-0 flex flex-col items-center justify-center px-8 text-center text-aubergine">
         <span className="font-press text-5xl italic opacity-80">S·M</span>
-        <span className="eyebrow mt-5 text-aubergine/70">Archival photograph</span>
-        <span className="mt-2 max-w-[26ch] font-display text-lg italic leading-snug text-aubergine/60">
+        <span className="eyebrow mt-5 text-aubergine/80">Archival photograph</span>
+        <span className="mt-2 max-w-[26ch] font-display text-lg italic leading-snug text-aubergine/75">
           Reserved for a photograph of the original press
         </span>
       </div>

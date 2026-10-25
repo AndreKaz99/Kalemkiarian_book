@@ -12,13 +12,16 @@ export function Legacy() {
       <CropMarks />
 
       {/* mirrored type, as it sits in the forme */}
-      <span
+      <svg
         aria-hidden
-        className="pointer-events-none absolute -right-[4vw] top-[6%] select-none font-press text-[34vw] leading-none text-aubergine/[0.045]"
+        viewBox="0 0 200 100"
+        className="pointer-events-none absolute -right-[4vw] top-[6%] w-[60vw] select-none"
         style={{ transform: "scaleX(-1)" }}
       >
-        SM
-      </span>
+        <text x="0" y="88" className="font-press" fontSize="100" fill="rgba(52,27,80,0.045)">
+          SM
+        </text>
+      </svg>
 
       <div className="page-x relative pb-28 pt-24 lg:pb-40 lg:pt-32">
         <div className="flex items-baseline justify-between">
@@ -26,7 +29,7 @@ export function Legacy() {
             <span className="font-display text-xl italic">04</span>
             <span className="eyebrow">Our Publishing Legacy</span>
           </Reveal>
-          <Reveal y={10} className="eyebrow hidden text-aubergine/60 sm:block">
+          <Reveal y={10} className="eyebrow hidden text-aubergine/75 sm:block">
             An exhibit in two plates
           </Reveal>
         </div>
@@ -34,7 +37,7 @@ export function Legacy() {
         <div className="mt-12 grid gap-12 lg:mt-16 lg:grid-cols-12 lg:items-end">
           <Reveal className="lg:col-span-8">
             <h2 id="legacy-heading" className="font-press text-[clamp(3.6rem,10.5vw,11.5rem)] leading-none tracking-[-0.02em]">
-              <span className="block">A Legacy</span>
+              <span className="block">A Legacy</span>{" "}
               {/* own line with clearance below the descender of "g" */}
               <em className="mt-[0.22em] block pl-[8vw] text-violet">in Print</em>
             </h2>
@@ -100,7 +103,7 @@ function Plates() {
         </svg>
         <motion.p
           style={{ opacity: labelOpacity }}
-          className="absolute bg-paper px-3 text-center font-press text-base italic leading-tight text-violet lg:-mt-[18%]"
+          className="absolute bg-paper px-3 text-center font-press text-base italic leading-tight text-violet-deep lg:-mt-[18%]"
         >
           carried forward
         </motion.p>
@@ -153,7 +156,7 @@ function Plate({
           <span className="font-press text-3xl italic leading-none text-violet">{numeral}.</span>
           <span>
             <span className="block font-press text-[1.7rem] leading-tight sm:text-[2rem]">{title}</span>
-            <span className="eyebrow mt-2 block text-aubergine/60">{place}</span>
+            <span className="eyebrow mt-2 block text-aubergine/75">{place}</span>
             <span className="mt-3 block max-w-sm font-display text-lg italic leading-snug text-aubergine/75">{note}</span>
           </span>
         </figcaption>
@@ -170,8 +173,8 @@ function PressInteraction() {
     <Reveal>
       <div className="border border-aubergine/20 bg-[#ece4d6]/60 p-6 sm:p-8">
         <div className="flex items-baseline justify-between">
-          <p className="eyebrow text-aubergine/70">The forme</p>
-          <p className="font-display text-sm italic text-aubergine/60">type is set in reverse</p>
+          <p className="eyebrow text-aubergine/80">The forme</p>
+          <p className="font-display text-sm italic text-aubergine/75">type is set in reverse</p>
         </div>
 
         {/* composing stick */}
@@ -187,7 +190,7 @@ function PressInteraction() {
             {word.map((ch, i) => (
               <span
                 key={i}
-                className="flex h-12 w-[1.9rem] items-center justify-center bg-gradient-to-b from-[#4a3166] to-[#2c1843] font-press text-2xl text-lilac shadow-[inset_0_-4px_0_rgba(0,0,0,0.35)] sm:h-14 sm:w-9 sm:text-[1.7rem]"
+                className="flex h-12 w-[1.9rem] items-center justify-center bg-[#3b2356] bg-gradient-to-b from-[#4a3166] to-[#2c1843] font-press text-2xl text-lilac shadow-[inset_0_-4px_0_rgba(0,0,0,0.35)] sm:h-14 sm:w-9 sm:text-[1.7rem]"
                 style={{ transform: "scaleX(-1)" }}
               >
                 {ch}
@@ -211,7 +214,7 @@ function PressInteraction() {
                 SAHAG-MESROB
               </motion.p>
             ) : (
-              <motion.p key="blank" className="eyebrow text-aubergine/40" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              <motion.p key="blank" className="eyebrow text-aubergine/70" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                 Blank sheet
               </motion.p>
             )}
@@ -222,7 +225,7 @@ function PressInteraction() {
           type="button"
           onClick={() => setPressed((p) => !p)}
           aria-pressed={pressed}
-          className="group mt-6 inline-flex items-center gap-3 text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-violet"
+          className="group mt-6 inline-flex items-center gap-3 text-[0.72rem] font-semibold uppercase tracking-[0.24em] text-violet-deep"
         >
           <span className="relative pb-1">
             {pressed ? "Reset the sheet" : "Pull an impression"}

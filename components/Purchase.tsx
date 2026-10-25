@@ -27,7 +27,7 @@ export function Purchase() {
       {/* poster frame & marginalia */}
       <div aria-hidden className="pointer-events-none absolute inset-3 border border-ivory/10 sm:inset-6" />
       <div className="relative">
-        <div className="page-x flex justify-between pt-12 text-[0.62rem] font-semibold uppercase tracking-[0.32em] text-lavender/70 sm:pt-14">
+        <div className="page-x flex justify-between pt-12 text-[0.68rem] font-semibold uppercase tracking-[0.3em] text-lavender/80 sm:pt-14">
           <span>{site.publisher}</span>
           <span className="hidden sm:inline">Available on Amazon</span>
         </div>
@@ -77,7 +77,7 @@ export function Purchase() {
           </div>
         </div>
 
-        <div className="page-x flex justify-between pb-12 text-[0.62rem] font-semibold uppercase tracking-[0.32em] text-lavender/70 sm:pb-14">
+        <div className="page-x flex justify-between pb-12 text-[0.68rem] font-semibold uppercase tracking-[0.3em] text-lavender/80 sm:pb-14">
           <span>Messages From Your Child About Divorce</span>
           <span className="hidden sm:inline">Judge {site.author}</span>
         </div>

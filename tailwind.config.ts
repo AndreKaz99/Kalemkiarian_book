@@ -8,7 +8,7 @@ const config: Config = {
         midnight: "#180E29",
         aubergine: "#341B50",
         plum: "#4A2A6E",
-        violet: { DEFAULT: "#8254DC", bright: "#9B74E8" },
+        violet: { DEFAULT: "#8254DC", bright: "#9B74E8", deep: "#6A3EC6" }, // deep: small text on light paper
         lavender: "#C8ACEF",
         lilac: "#F0E8FA",
         ivory: "#FAF7F2",

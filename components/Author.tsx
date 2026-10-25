@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
+import { AnimatePresence, motion, useInView, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { assets, withBasePath } from "@/lib/site";
@@ -41,7 +41,7 @@ export function Author() {
             <span className="font-display text-xl italic">02</span>
             <span className="eyebrow">Meet the Author</span>
           </Reveal>
-          <Reveal y={10} className="eyebrow hidden text-aubergine/60 sm:block">
+          <Reveal y={10} className="eyebrow hidden text-aubergine/75 sm:block">
             Profile
           </Reveal>
         </div>
@@ -50,7 +50,7 @@ export function Author() {
         <h2 id="author-heading" className="relative z-0 mt-12 lg:mt-16">
           <Reveal y={20}>
             <span className="block font-display text-[clamp(2.2rem,5vw,5rem)] italic leading-none text-violet">Sharon L.</span>
-          </Reveal>
+          </Reveal>{" "}
           <motion.span
             style={{ x: nameX }}
             className="block overflow-visible whitespace-nowrap font-display text-[16.2vw] leading-[0.82] tracking-[-0.045em] text-aubergine 2xl:text-[15rem]"
@@ -145,14 +145,30 @@ export function Author() {
 
 /* "A perspective shaped as a judge / an attorney / an educator / a mother" */
 function Perspective() {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-20% 0px" });
   const [i, setI] = useState(0);
+  // Plays through once and settles (well under five seconds), so nothing keeps moving on its own.
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const id = setInterval(() => setI((n) => (n + 1) % perspectives.length), 2200);
+    if (!inView) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setI(perspectives.length - 1);
+      return;
+    }
+    const id = setInterval(() => {
+      setI((n) => {
+        if (n >= perspectives.length - 1) {
+          clearInterval(id);
+          return n;
+        }
+        return n + 1;
+      });
+    }, 1200);
     return () => clearInterval(id);
-  }, []);
+  }, [inView]);
   return (
     <Reveal>
+      <div ref={ref} />
       <p className="font-display text-[clamp(2rem,3.4vw,3.2rem)] leading-tight text-aubergine">
         <span className="sr-only">A perspective shaped as a judge, an attorney, an educator, and a mother.</span>
         <span aria-hidden>

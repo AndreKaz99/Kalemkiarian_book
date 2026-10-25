@@ -24,7 +24,7 @@ export function AboutBook() {
             <span className="font-display text-xl italic">01</span>
             <span className="eyebrow">The Book</span>
           </Reveal>
-          <Reveal y={10} className="eyebrow hidden text-aubergine/60 sm:block">
+          <Reveal y={10} className="eyebrow hidden text-aubergine/75 sm:block">
             An open spread
           </Reveal>
         </div>
@@ -116,7 +116,7 @@ export function AboutBook() {
 
 function RunningHead({ children, side }: { children: React.ReactNode; side: "left" | "right" }) {
   return (
-    <p className={`text-[0.62rem] font-semibold uppercase tracking-[0.36em] text-smoke ${side === "right" ? "lg:text-right" : ""}`}>
+    <p className={`text-[0.68rem] font-semibold uppercase tracking-[0.34em] text-smoke ${side === "right" ? "lg:text-right" : ""}`}>
       {children}
     </p>
   );
@@ -157,7 +157,7 @@ function ThroughTheirEyes() {
 
       <div className="lg:col-span-7">
         <Reveal>
-          <p className="eyebrow mb-4 text-aubergine/60">Themes the book explores</p>
+          <p className="eyebrow mb-4 text-aubergine/75">Themes the book explores</p>
         </Reveal>
         <ul className="border-t border-aubergine/20">
           {themes.map((t, i) => {
@@ -202,7 +202,7 @@ function ThroughTheirEyes() {
                       className="overflow-hidden"
                     >
                       <div className="grid gap-3 pb-8 sm:grid-cols-[11rem_1fr] sm:gap-8">
-                        <p className="eyebrow pt-1.5 text-aubergine/60">{t.summary}</p>
+                        <p className="eyebrow pt-1.5 text-aubergine/75">{t.summary}</p>
                         <p className="body-copy max-w-xl text-ink/75">{t.body}</p>
                       </div>
                     </motion.div>
@@ -216,12 +216,12 @@ function ThroughTheirEyes() {
 
       <Reveal delay={0.1} className="lg:col-span-12">
         <div className="border-t border-aubergine/20 pt-8">
-          <p className="eyebrow mb-4 text-aubergine/60">Co-parenting, explored</p>
+          <p className="eyebrow mb-4 text-aubergine/75">Co-parenting, explored</p>
           <p className="font-display text-[1.45rem] leading-relaxed text-aubergine sm:text-[1.7rem] lg:whitespace-nowrap lg:text-[clamp(1.4rem,2.15vw,2.2rem)]">
             {coparentingTopics.map((t, i) => (
               <span key={t} className="inline-block whitespace-nowrap">
                 <em>{t}</em>
-                {i < coparentingTopics.length - 1 && <span className="mx-3 text-violet/60 lg:mx-5">/</span>}
+                {i < coparentingTopics.length - 1 && <span aria-hidden className="mx-3 text-violet-deep lg:mx-5">/</span>}
               </span>
             ))}
           </p>
@@ -269,7 +269,7 @@ export function ConflictQuote() {
               accentClass="text-ivory"
             />
           </p>
-          <p className="eyebrow mt-14 text-lavender/60 lg:ml-[16vw]">The heart of the book</p>
+          <p className="eyebrow mt-14 text-lavender/85 lg:ml-[16vw]">The heart of the book</p>
         </motion.blockquote>
       </div>
     </section>

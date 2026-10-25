@@ -30,13 +30,13 @@ export function Footer() {
           >
             Get the Book on Amazon<span className="sr-only"> (opens in a new tab)</span> ↗
           </a>
-          <p className="mt-5 text-sm text-ivory/50">
+          <p className="mt-5 text-sm text-ivory/65">
             Published by <span className="font-press text-base text-ivory/80">{site.publisher}</span>
           </p>
         </div>
       </div>
 
-      <div className="page-x relative z-10 flex flex-col gap-2 border-t border-ivory/10 bg-ink py-6 text-xs text-ivory/45 sm:flex-row sm:justify-between">
+      <div className="page-x relative z-10 flex flex-col gap-2 border-t border-ivory/10 bg-ink py-6 text-xs text-ivory/60 sm:flex-row sm:justify-between">
         <p>
           © {new Date().getFullYear()} {site.author}. All rights reserved.
         </p>

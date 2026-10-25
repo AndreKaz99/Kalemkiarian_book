@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion, useScroll, useSpring } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AMAZON_URL, nav, site } from "@/lib/site";
 
 /**
@@ -15,6 +15,8 @@ export function Navigation() {
   const [hidden, setHidden] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [active, setActive] = useState("home");
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const wasOpen = useRef(false);
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30 });
 
@@ -60,6 +62,16 @@ export function Navigation() {
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
+    // Keep keyboard and screen-reader focus inside the open menu
+    for (const el of [document.querySelector("a[href='#main']"), document.getElementById("main"), document.querySelector("footer")]) {
+      if (el) menuOpen ? el.setAttribute("inert", "") : el.removeAttribute("inert");
+    }
+    if (menuOpen) {
+      requestAnimationFrame(() => document.querySelector<HTMLAnchorElement>("#mobile-menu a")?.focus());
+    } else if (wasOpen.current) {
+      toggleRef.current?.focus();
+    }
+    wasOpen.current = menuOpen;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setMenuOpen(false);
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -128,6 +140,7 @@ export function Navigation() {
           </a>
           <button
             type="button"
+            ref={toggleRef}
             className="relative z-[60] -mr-2 flex h-11 w-11 items-center justify-center xl:hidden"
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
@@ -153,6 +166,9 @@ export function Navigation() {
         {menuOpen && (
           <motion.div
             id="mobile-menu"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Site menu"
             className="grain fixed inset-0 z-50 flex flex-col overflow-y-auto bg-midnight text-ivory xl:hidden"
             initial={{ clipPath: "inset(0 0 100% 0)" }}
             animate={{ clipPath: "inset(0 0 0% 0)" }}
@@ -194,7 +210,7 @@ export function Navigation() {
                 Get the Book on Amazon <span aria-hidden>→</span>
                 <span className="sr-only"> (opens in a new tab)</span>
               </a>
-              <p className="mt-6 text-xs text-ivory/50">
+              <p className="mt-6 text-xs text-ivory/65">
                 Judge {site.author} · {site.publisher}
               </p>
             </motion.div>

@@ -231,6 +231,9 @@ export function Book3D({ openable = false, onOpenChange }: { openable?: boolean;
               </span>
             </div>
 
+            {/* Pages only exist when the book can be opened; closed, the cover hides them anyway */}
+            {openable && (
+              <>
             {/* Right-hand page — the introduction */}
             <div
               className="absolute right-[3px] top-[1.5%] h-[97%] w-[calc(100%-4px)] bg-[#f8f4ec]"
@@ -286,6 +289,9 @@ export function Book3D({ openable = false, onOpenChange }: { openable?: boolean;
                 <LeafStrip i={0} open={open} reduce={!!reduce} />
               </motion.div>
             </div>
+
+              </>
+            )}
 
             {/* Front cover — purely visual; clicks fall through to the targets beneath */}
             <div
