@@ -33,7 +33,7 @@ export function Legacy() {
 
         <div className="mt-12 grid gap-12 lg:mt-16 lg:grid-cols-12 lg:items-end">
           <Reveal className="lg:col-span-8">
-            <h2 id="legacy-heading" className="font-press text-[clamp(3.6rem,10.5vw,11.5rem)] leading-[0.86] tracking-[-0.02em]">
+            <h2 id="legacy-heading" className="font-press text-[clamp(3.6rem,10.5vw,11.5rem)] leading-[1.08] tracking-[-0.02em]">
               A Legacy <br />
               <em className="pl-[8vw] text-violet">in Print</em>
             </h2>
