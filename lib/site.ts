@@ -5,6 +5,9 @@
 
 export const AMAZON_URL = "https://www.amazon.com/What-Want-Tell-You-Messages/dp/B0HJ6VY2RB";
 
+// TODO: replace with the book's Instagram profile once it exists, e.g. "https://www.instagram.com/handle/"
+export const INSTAGRAM_URL = "https://www.instagram.com/";
+
 export const site = {
   url: "https://andrekaz99.github.io/Kalemkiarian_book", // live address — update if a custom domain is added
   title: "What I Want to Tell You Is...",

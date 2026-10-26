@@ -1,4 +1,4 @@
-import { AMAZON_URL, nav, site } from "@/lib/site";
+import { AMAZON_URL, INSTAGRAM_URL, nav, site } from "@/lib/site";
 
 export function Footer() {
   return (
@@ -33,6 +33,19 @@ export function Footer() {
           <p className="mt-5 text-sm text-ivory/65">
             Published by <span className="font-press text-base text-ivory/80">{site.publisher}</span>
           </p>
+          <a
+            href={INSTAGRAM_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram (opens in a new tab)"
+            className="mt-6 inline-flex h-11 w-11 items-center justify-center rounded-full border border-ivory/25 text-ivory/80 transition-colors duration-300 hover:border-lavender hover:bg-lavender hover:text-midnight"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden>
+              <rect x="3" y="3" width="18" height="18" rx="5" />
+              <circle cx="12" cy="12" r="4" />
+              <circle cx="17.5" cy="6.5" r="0.9" fill="currentColor" stroke="none" />
+            </svg>
+          </a>
         </div>
       </div>
 
